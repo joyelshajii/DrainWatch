@@ -58,7 +58,7 @@ export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   );
 };
 
-// Specialized KPI Tile: Clean, de-boxed, without loud top borders, dominant stat number
+// Specialized KPI Tile: Clean card with top accent line, matching icon container, and prominent metric
 export interface KpiTileProps {
   label: string;
   value: string | number;
@@ -76,35 +76,57 @@ export const KpiTile: React.FC<KpiTileProps> = ({
   icon,
   accent = 'neutral',
 }) => {
-  // Value color strictly mapped to functional status, card itself is clean neutral
-  const textColors = {
-    neutral: 'text-slate-900',
-    pending: 'text-amber-800',
-    critical: 'text-rose-800',
-    resolved: 'text-emerald-800',
+  // Top border accent strictly mapped to 3 status colors + 1 neutral
+  const accentStyles = {
+    neutral: {
+      borderTop: 'border-t-2 border-t-slate-300',
+      text: 'text-slate-900',
+      iconBox: 'bg-slate-50 text-slate-500 border-slate-200',
+    },
+    pending: {
+      borderTop: 'border-t-4 border-t-amber-500',
+      text: 'text-amber-700',
+      iconBox: 'bg-amber-50 text-amber-600 border-amber-200',
+    },
+    critical: {
+      borderTop: 'border-t-4 border-t-rose-600',
+      text: 'text-rose-700',
+      iconBox: 'bg-rose-50 text-rose-600 border-rose-200',
+    },
+    resolved: {
+      borderTop: 'border-t-4 border-t-emerald-500',
+      text: 'text-emerald-700',
+      iconBox: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    },
   };
 
+  const currentAccent = accentStyles[accent] || accentStyles.neutral;
+
   return (
-    <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col justify-between">
+    <div
+      className={`bg-white border border-slate-200/90 ${currentAccent.borderTop} rounded-xl p-5 shadow-2xs flex flex-col justify-between transition-all duration-150`}
+    >
       <div className="flex items-center justify-between gap-2">
         <span className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
           {label}
         </span>
-        <div className="w-7 h-7 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+        <div
+          className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 ${currentAccent.iconBox}`}
+        >
           {icon}
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-4">
         <div className="flex items-baseline gap-2">
-          <span className={`text-3xl sm:text-4xl font-bold font-mono tracking-tight ${textColors[accent]}`}>
+          <span className={`text-2xl sm:text-3xl font-bold font-mono tracking-tight ${currentAccent.text}`}>
             {value}
           </span>
-          <span className="text-xs text-slate-500 font-normal">{subtext}</span>
+          <span className="text-xs font-normal text-slate-600">{subtext}</span>
         </div>
 
         {secondaryText && (
-          <p className="text-[11px] text-slate-400 mt-1 font-normal truncate">
+          <p className="text-[11px] text-slate-400 mt-1.5 font-normal truncate">
             {secondaryText}
           </p>
         )}

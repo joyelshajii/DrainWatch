@@ -256,19 +256,19 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-semibold text-[11px] uppercase tracking-wider font-mono">
-                <th className="py-3 px-4">Ticket</th>
-                <th className="py-3 px-4">Ward &amp; Basin</th>
-                <th className="py-3 px-4">Obstruction</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">SLA Countdown</th>
-                <th className="py-3 px-4">Field Squad</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-3.5 px-5">Ticket</th>
+                <th className="py-3.5 px-5">Ward &amp; Basin</th>
+                <th className="py-3.5 px-5">Obstruction</th>
+                <th className="py-3.5 px-5">Status</th>
+                <th className="py-3.5 px-5">SLA Countdown</th>
+                <th className="py-3.5 px-5">Field Squad</th>
+                <th className="py-3.5 px-5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 px-4 text-center text-slate-500">
+                  <td colSpan={7} className="py-12 px-5 text-center text-slate-500">
                     No grievance records match the current filter.
                   </td>
                 </tr>
@@ -278,23 +278,23 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
 
                   return (
                     <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3.5 px-5 whitespace-nowrap">
                         <div className="font-mono font-semibold text-slate-900">{r.id}</div>
                         <div className="text-[11px] text-slate-400 font-mono">
                           {new Date(r.created_at).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-5">
                         <div className="font-semibold text-slate-900">Ward {r.ward_number} - {r.ward_name}</div>
                         <div className="text-[11px] text-slate-500 truncate max-w-xs">{r.canal_basin}</div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3.5 px-5">
                         <div className="font-medium text-slate-800">{r.blockage_type.replace(/_/g, ' ')}</div>
                         <div className="mt-0.5">
                           <HazardTag severity={r.severity} />
                         </div>
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3.5 px-5 whitespace-nowrap">
                         <Badge
                           variant={
                             r.status.startsWith('ESCALATED')
@@ -312,7 +312,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                           {r.status.replace(/_/g, ' ')}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap font-mono text-xs">
+                      <td className="py-3.5 px-5 whitespace-nowrap font-mono text-xs">
                         {r.status === 'RESOLVED' ? (
                           <span className="text-emerald-700 font-medium flex items-center gap-1">
                             <CheckCircle2 className="w-3.5 h-3.5" /> De-silted
@@ -324,14 +324,14 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-slate-600 truncate max-w-xs">
+                      <td className="py-3.5 px-5 text-slate-600 truncate max-w-xs">
                         {r.assigned_crew ? (
                           <span className="font-medium text-slate-800">{r.assigned_crew}</span>
                         ) : (
                           <span className="text-slate-400 italic">Unassigned</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
+                      <td className="py-3.5 px-5 text-right whitespace-nowrap space-x-1.5">
                         <Button
                           variant="secondary"
                           size="sm"

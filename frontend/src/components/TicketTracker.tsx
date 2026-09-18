@@ -149,8 +149,8 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
         </p>
       </div>
 
-      {/* Search Toolbar: Lightweight secondary styling */}
-      <div className="bg-slate-100/60 border border-slate-200/80 rounded-xl p-3.5 space-y-3">
+      {/* Search Toolbar: Standard white card container */}
+      <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs space-y-3">
         <form onSubmit={handleSearch} className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -159,7 +159,7 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
               value={ticketIdInput}
               onChange={(e) => setTicketIdInput(e.target.value)}
               placeholder="Enter ticket number (e.g. KL-KCH-W66-2026-0102)..."
-              className="w-full min-h-[38px] pl-9 pr-3 py-1.5 text-xs font-mono uppercase text-slate-900 rounded-lg border border-slate-300 bg-white focus:outline-none focus:border-slate-800"
+              className="w-full min-h-[38px] pl-9 pr-3 py-1.5 text-xs font-mono uppercase text-slate-900 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 placeholder:text-slate-400"
             />
           </div>
           <Button
