@@ -1,16 +1,10 @@
 import React from 'react';
 import {
   LayoutDashboard,
-  Map,
   FilePlus,
   Activity,
   Users,
   Trophy,
-  BarChart2,
-  PhoneCall,
-  Layers,
-  UserCheck,
-  Settings,
   Leaf,
   X,
 } from 'lucide-react';
@@ -20,8 +14,6 @@ interface SidebarProps {
   onSelectTab: (tab: string) => void;
   isOpen: boolean;
   onClose: () => void;
-  onEmergencyClick?: () => void;
-  onAdminClick?: (section: string) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -29,37 +21,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectTab,
   isOpen,
   onClose,
-  onEmergencyClick,
-  onAdminClick,
 }) => {
-  const mainNavItems = [
+  const navItems = [
     { id: 'map', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'map_only', label: 'Open-Report Map', icon: Map },
     { id: 'report', label: 'File Report', icon: FilePlus },
     { id: 'track', label: 'Track & Escalate', icon: Activity },
     { id: 'official', label: 'Officer Triage', icon: Users },
     { id: 'leaderboard', label: 'Civic Champions', icon: Trophy },
-    { id: 'insights', label: 'Reports & Insights', icon: BarChart2 },
-    { id: 'emergency', label: 'Emergency 24x7', icon: PhoneCall },
-  ];
-
-  const adminNavItems = [
-    { id: 'admin_wards', label: 'Ward Management', icon: Layers },
-    { id: 'admin_users', label: 'User Management', icon: UserCheck },
-    { id: 'admin_settings', label: 'Settings', icon: Settings },
   ];
 
   const handleItemClick = (id: string) => {
-    if (id === 'map_only') {
-      onSelectTab('map');
-    } else if (id === 'emergency') {
-      if (onEmergencyClick) onEmergencyClick();
-      else window.location.href = 'tel:18004254000';
-    } else if (id === 'insights' || id.startsWith('admin_')) {
-      if (onAdminClick) onAdminClick(id);
-    } else {
-      onSelectTab(id);
-    }
+    onSelectTab(id);
     onClose();
   };
 
@@ -109,21 +81,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Scrollable Navigation Body */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-          {/* Main Navigation */}
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto px-3 py-4">
           <nav className="space-y-1">
-            {mainNavItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive =
-                (item.id === 'map' && currentTab === 'map') ||
-                (item.id === currentTab);
+              const isActive = item.id === currentTab;
 
               return (
                 <button
                   key={item.id}
                   onClick={() => handleItemClick(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs rounded-xl font-medium transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] rounded-xl font-medium transition-all cursor-pointer ${
                     isActive
                       ? 'bg-sky-50 text-sky-700 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -135,26 +104,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               );
             })}
           </nav>
-
-          {/* Admin Navigation */}
-          <div className="space-y-1 pt-2">
-            <span className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">
-              Admin
-            </span>
-            {adminNavItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleItemClick(item.id)}
-                  className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-xl font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer"
-                >
-                  <Icon className="w-4 h-4 text-slate-400" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
         </div>
 
         {/* Bottom Civic Banner */}
