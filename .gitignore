@@ -1,26 +1,16 @@
 # Dependencies
 node_modules/
 dist/
-dist-ssr/
-*.local
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
+# Python virtual environment & cache
 venv/
-env/
 .env
+__pycache__/
+*.pyc
 
-# IDE
+# IDEs & System
 .idea/
 .vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS
 .DS_Store
 Thumbs.db
+*.log
