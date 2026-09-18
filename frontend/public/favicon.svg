@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <rect width="48" height="48" rx="8" fill="#0c2340" />
+  <path d="M12 14C12 14 18 11 24 11C30 11 36 14 36 14V28C36 34 24 38 24 38C24 38 12 34 12 28V14Z" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Drainage canal grates -->
+  <line x1="18" y1="18" x2="18" y2="28" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="24" y1="16" x2="24" y2="30" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="30" y1="18" x2="30" y2="28" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 23H32" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

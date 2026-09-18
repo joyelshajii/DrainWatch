@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Citizen Warden (You)",
+    "phone": "+91 98470 12345",
+    "points": 50,
+    "reports_count": 5,
+    "badge": "Gold Civic Guardian"
+  },
+  {
+    "name": "Adv. Anoop Menon",
+    "phone": "+91 94471 88990",
+    "points": 40,
+    "reports_count": 4,
+    "badge": "Silver Water Watcher"
+  },
+  {
+    "name": "Dr. Sarah Thomas",
+    "phone": "+91 98460 33445",
+    "points": 30,
+    "reports_count": 3,
+    "badge": "Bronze Silt Scout"
+  },
+  {
+    "name": "Kadavanthra Residents Assoc.",
+    "phone": "+91 484 2205120",
+    "points": 20,
+    "reports_count": 2,
+    "badge": "Community Shield"
+  },
+  {
+    "name": "Test Citizen",
+    "phone": "",
+    "points": 10,
+    "reports_count": 1,
+    "badge": "Water Warden"
+  }
+]
