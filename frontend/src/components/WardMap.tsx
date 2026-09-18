@@ -12,10 +12,12 @@ import {
   Info,
   AlertTriangle,
   FileText,
+  AlertCircle,
+  ShieldAlert,
 } from 'lucide-react';
 import { Button } from './ui/Button';
-import { Badge } from './ui/Badge';
-import { Card } from './ui/Card';
+import { Badge, HazardTag } from './ui/Badge';
+import { Card, KpiTile } from './ui/Card';
 
 interface WardMapProps {
   onSelectTicket: (id: string) => void;
@@ -100,7 +102,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
     };
   }, []);
 
-  // Whenever viewMode changes, invalidate map size to prevent gray boxes or frozen maps!
+  // Map resize handler
   useEffect(() => {
     const timer = setTimeout(() => {
       if (mapInstanceRef.current) {
@@ -122,37 +124,37 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
     const geoLayer = L.geoJSON(wardsData as any, {
       style: (feature: any) => {
         const activeReports = feature?.properties?.active_reports || 0;
-        let color = '#2563eb';
-        let fillColor = '#3b82f6';
-        let fillOpacity = 0.08;
+        let color = '#475569';
+        let fillColor = '#64748b';
+        let fillOpacity = 0.05;
 
         if (activeReports > 1) {
           color = '#e11d48';
-          fillColor = '#f43f5e';
-          fillOpacity = 0.18;
+          fillColor = '#e11d48';
+          fillOpacity = 0.14;
         } else if (activeReports === 1) {
           color = '#d97706';
-          fillColor = '#f59e0b';
-          fillOpacity = 0.14;
+          fillColor = '#d97706';
+          fillOpacity = 0.1;
         }
 
         return {
           color,
-          weight: 2,
-          opacity: 0.9,
+          weight: 1.5,
+          opacity: 0.8,
           fillColor,
           fillOpacity,
-          dashArray: '4, 4',
+          dashArray: '3, 3',
         };
       },
       onEachFeature: (feature: any, layer: any) => {
         const p = feature.properties;
         const tooltipContent = `
           <div style="font-family: inherit; font-size: 12px; padding: 2px 4px;">
-            <div style="font-weight: 700; color: #0f172a;">${p.name} (${p.id})</div>
+            <div style="font-weight: 600; color: #0f172a;">${p.name} (${p.id})</div>
             <div style="color: #64748b; font-size: 11px;">${p.canal_basin}</div>
             <div style="margin-top: 4px; font-weight: 600; color: ${
-              p.active_reports > 0 ? '#e11d48' : '#059669'
+              p.active_reports > 0 ? '#be123c' : '#047857'
             }; font-size: 11px;">
               ${p.active_reports} Active Choke(s)
             </div>
@@ -178,68 +180,68 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
     markersGroup.clearLayers();
 
     reports.forEach((report) => {
-      let pinColor = '#f59e0b';
+      let pinColor = '#d97706';
       let pinPulse = false;
 
       if (report.status.startsWith('ESCALATED') || report.severity === 'CRITICAL') {
         pinColor = '#e11d48';
         pinPulse = true;
       } else if (report.status === 'RESOLVED') {
-        pinColor = '#10b981';
+        pinColor = '#059669';
       } else if (report.status === 'IN_PROGRESS') {
-        pinColor = '#3b82f6';
+        pinColor = '#475569';
       }
 
       const customIcon = L.divIcon({
         className: 'custom-drain-marker',
         html: `
-          <div style="position: relative; width: 26px; height: 26px; cursor: pointer;">
+          <div style="position: relative; width: 22px; height: 22px; cursor: pointer;">
             <div class="${pinPulse ? 'marker-pulse-critical' : ''}" style="
-              width: 24px;
-              height: 24px;
+              width: 20px;
+              height: 20px;
               background-color: ${pinColor};
               border: 2px solid #ffffff;
               border-radius: 50%;
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
               color: white;
-              font-weight: bold;
-              font-size: 10px;
+              font-weight: 600;
+              font-size: 9px;
             ">
               ${report.severity === 'CRITICAL' ? '!' : report.status === 'RESOLVED' ? '✓' : '•'}
             </div>
           </div>
         `,
-        iconSize: [26, 26],
-        iconAnchor: [13, 13],
-        popupAnchor: [0, -14],
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+        popupAnchor: [0, -11],
       });
 
       const marker = L.marker([report.latitude, report.longitude], { icon: customIcon });
 
       const popupContent = `
-        <div style="font-family: inherit; padding: 12px; width: 250px;">
+        <div style="font-family: inherit; padding: 12px; width: 240px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 10px; font-weight: 700; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; padding: 1px 6px; border-radius: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: #0f172a; font-family: monospace;">
               ${report.id}
             </span>
-            <span style="font-size: 10px; font-weight: 600; color: #475569;">
+            <span style="font-size: 11px; color: #64748b;">
               ${report.ward_id}
             </span>
           </div>
           ${
             report.photo_url
-              ? `<div style="margin-bottom: 8px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; height: 100px;">
+              ? `<div style="margin-bottom: 8px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; height: 95px;">
                   <img src="${report.photo_url}" alt="Site Evidence" style="width: 100%; height: 100%; object-fit: cover; display: block;"/>
                  </div>`
               : ''
           }
-          <div style="font-size: 12px; font-weight: 600; color: #0f172a; margin-bottom: 3px;">
+          <div style="font-size: 12px; font-weight: 600; color: #0f172a; margin-bottom: 2px;">
             ${report.blockage_type.replace(/_/g, ' ')}
           </div>
-          <div style="font-size: 11px; color: #64748b; margin-bottom: 10px; line-height: 1.3;">
+          <div style="font-size: 11px; color: #64748b; margin-bottom: 8px; line-height: 1.3;">
             ${report.landmark || report.address}
           </div>
           <button id="view-ticket-${report.id}" style="
@@ -247,9 +249,9 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             background-color: #0f172a;
             color: #ffffff;
             border: none;
-            padding: 7px 10px;
+            padding: 6px 10px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             border-radius: 6px;
             cursor: pointer;
             display: flex;
@@ -284,282 +286,262 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
   };
 
   return (
-    <div className="space-y-5">
-      {/* High-Impact Telemetry Overview */}
+    <div className="space-y-6">
+      {/* 1. Page Header: Strong title scale, subtle subordinate copy */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            Canal &amp; Storm-Drain Redressal Grid
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
+            Public operational map and grievance tracking across 12 Kochi Municipal Corporation wards.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onNavigateToReport}
+            icon={<PlusCircle className="w-4 h-4" />}
+          >
+            Report Blockage
+          </Button>
+        </div>
+      </div>
+
+      {/* 2. Structured KPI Tiles: Dominant bold numbers, clean de-boxed appearance */}
       {stats && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <Card className="p-4 bg-white border-slate-200">
-            <div className="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
-              <span>Total Grievances</span>
-              <FileText className="w-4 h-4 text-slate-400" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-slate-900">
-                {stats.total_reports}
-              </span>
-              <span className="text-xs text-slate-500">tickets filed</span>
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Kochi Municipal Jurisdiction</div>
-          </Card>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <KpiTile
+            label="Total Grievances"
+            value={stats.total_reports}
+            subtext="tickets filed"
+            secondaryText="Kochi Municipal Jurisdiction"
+            icon={<FileText className="w-4 h-4" />}
+            accent="neutral"
+          />
 
-          <Card className="p-4 bg-amber-50/40 border-amber-200/80">
-            <div className="flex items-center justify-between text-amber-900 text-xs font-semibold uppercase tracking-wider">
-              <span>Active Choke Points</span>
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-amber-800">
-                {stats.active_blockages}
-              </span>
-              <span className="text-xs text-amber-700 font-medium">requiring clearance</span>
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">
-              {stats.in_progress} crew(s) actively deployed
-            </div>
-          </Card>
+          <KpiTile
+            label="Active Choke Points"
+            value={stats.active_blockages}
+            subtext="unresolved"
+            secondaryText={`${stats.in_progress} squad(s) deployed`}
+            icon={<AlertCircle className="w-4 h-4" />}
+            accent="pending"
+          />
 
-          <Card className="p-4 bg-rose-50/40 border-rose-200/80">
-            <div className="flex items-center justify-between text-rose-900 text-xs font-semibold uppercase tracking-wider">
-              <span>SLA Escalated (AE/DDMA)</span>
-              <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-rose-800">
-                {stats.escalated_count}
-              </span>
-              <span className="text-xs text-rose-700 font-medium">breached SLA</span>
-            </div>
-            <div className="text-[11px] text-rose-700 font-medium mt-1">
-              {stats.critical_flood_risk} high flood risk zone(s)
-            </div>
-          </Card>
+          <KpiTile
+            label="SLA Escalated (AE/DDMA)"
+            value={stats.escalated_count}
+            subtext="breached SLA"
+            secondaryText={`${stats.critical_flood_risk} high flood risk zone(s)`}
+            icon={<ShieldAlert className="w-4 h-4" />}
+            accent="critical"
+          />
 
-          <Card className="p-4 bg-emerald-50/40 border-emerald-200/80">
-            <div className="flex items-center justify-between text-emerald-900 text-xs font-semibold uppercase tracking-wider">
-              <span>De-silted &amp; Cleared</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-emerald-800">
-                {stats.resolved}
-              </span>
-              <span className="text-xs text-emerald-700 font-medium">flow restored</span>
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">
-              Avg resolution: <strong className="text-slate-800 font-mono">{stats.avg_resolution_hours.toFixed(1)}h</strong>
-            </div>
-          </Card>
+          <KpiTile
+            label="De-silted & Cleared"
+            value={stats.resolved}
+            subtext="flow restored"
+            secondaryText={`Avg resolution: ${stats.avg_resolution_hours.toFixed(1)}h`}
+            icon={<CheckCircle2 className="w-4 h-4" />}
+            accent="resolved"
+          />
         </div>
       )}
 
-      {/* Filter & Command Strip */}
-      <Card className="p-3.5 space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2.5 flex-1">
-            {/* Search */}
-            <div className="relative min-w-[220px] flex-1 sm:flex-none">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search ticket, canal, road..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full min-h-[38px] pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600"
-              />
-            </div>
-
-            {/* Ward filter */}
-            <select
-              value={selectedWard}
-              onChange={(e) => setSelectedWard(e.target.value)}
-              className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-sky-600 cursor-pointer"
-            >
-              <option value="">All Municipal Wards</option>
-              <option value="W48">Ward 48 - Kadavanthra</option>
-              <option value="W58">Ward 58 - Thevara</option>
-              <option value="W42">Ward 42 - Vyttila</option>
-              <option value="W44">Ward 44 - Elamakkulam</option>
-              <option value="W35">Ward 35 - Kaloor North</option>
-              <option value="W36">Ward 36 - Kaloor South</option>
-              <option value="W33">Ward 33 - Palarivattom</option>
-              <option value="W28">Ward 28 - Edappally</option>
-              <option value="W66">Ward 66 - Ernakulam South</option>
-              <option value="W67">Ward 67 - Marine Drive</option>
-              <option value="W60">Ward 60 - Fort Kochi</option>
-              <option value="W62">Ward 62 - Mattancherry</option>
-            </select>
-
-            {/* Status filter */}
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-sky-600 cursor-pointer"
-            >
-              <option value="">All Statuses</option>
-              <option value="ACTIVE">All Active Grievances</option>
-              <option value="REPORTED">Reported / Pending</option>
-              <option value="INSPECTED">Inspected by Overseer</option>
-              <option value="IN_PROGRESS">In Progress (Crew Deployed)</option>
-              <option value="ESCALATED">SLA Escalated (AE/DDMA)</option>
-              <option value="RESOLVED">Resolved &amp; Cleared</option>
-            </select>
-
-            {/* Severity filter */}
-            <select
-              value={selectedSeverity}
-              onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-sky-600 cursor-pointer"
-            >
-              <option value="">All Severities</option>
-              <option value="CRITICAL">Critical (24h SLA - Flood Hazard)</option>
-              <option value="HIGH">High (48h SLA - Waterlogging)</option>
-              <option value="MODERATE">Moderate (72h SLA)</option>
-              <option value="MINOR">Minor (96h SLA)</option>
-            </select>
-
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearFilters}
-                className="text-xs text-slate-500 hover:text-slate-900"
-              >
-                Reset Filters
-              </Button>
-            )}
-
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={loadData}
-              title="Refresh Data"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            </Button>
+      {/* 3. Utility Filter Bar: Visually secondary, blends into background, thin border */}
+      <div className="bg-slate-100/60 border border-slate-200/80 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2 flex-1">
+          {/* Search */}
+          <div className="relative min-w-[200px] flex-1 sm:flex-none">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search ticket, canal, road..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full min-h-[36px] pl-8 pr-3 py-1 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:border-slate-800"
+            />
           </div>
 
-          {/* View Mode Switcher + CTA */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
-              <button
-                onClick={() => setViewMode('split')}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
-                  viewMode === 'split' ? 'bg-white text-slate-900 shadow-xs font-semibold' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Split View
-              </button>
-              <button
-                onClick={() => setViewMode('map')}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
-                  viewMode === 'map' ? 'bg-white text-slate-900 shadow-xs font-semibold' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Map Only
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
-                  viewMode === 'table' ? 'bg-white text-slate-900 shadow-xs font-semibold' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Table Only
-              </button>
-            </div>
+          {/* Ward filter */}
+          <select
+            value={selectedWard}
+            onChange={(e) => setSelectedWard(e.target.value)}
+            className="min-h-[36px] px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-slate-800 cursor-pointer"
+          >
+            <option value="">All Wards</option>
+            <option value="W48">Ward 48 - Kadavanthra</option>
+            <option value="W58">Ward 58 - Thevara</option>
+            <option value="W42">Ward 42 - Vyttila</option>
+            <option value="W44">Ward 44 - Elamakkulam</option>
+            <option value="W35">Ward 35 - Kaloor North</option>
+            <option value="W36">Ward 36 - Kaloor South</option>
+            <option value="W33">Ward 33 - Palarivattom</option>
+            <option value="W28">Ward 28 - Edappally</option>
+            <option value="W66">Ward 66 - Ernakulam South</option>
+            <option value="W67">Ward 67 - Marine Drive</option>
+            <option value="W60">Ward 60 - Fort Kochi</option>
+            <option value="W62">Ward 62 - Mattancherry</option>
+          </select>
 
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onNavigateToReport}
-              icon={<PlusCircle className="w-4 h-4" />}
+          {/* Status filter */}
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="min-h-[36px] px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-slate-800 cursor-pointer"
+          >
+            <option value="">All Statuses</option>
+            <option value="ACTIVE">All Active Grievances</option>
+            <option value="REPORTED">Reported / Pending</option>
+            <option value="INSPECTED">Inspected</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="ESCALATED">SLA Escalated</option>
+            <option value="RESOLVED">Resolved</option>
+          </select>
+
+          {/* Severity filter */}
+          <select
+            value={selectedSeverity}
+            onChange={(e) => setSelectedSeverity(e.target.value)}
+            className="min-h-[36px] px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-slate-800 cursor-pointer"
+          >
+            <option value="">All Severities</option>
+            <option value="CRITICAL">Critical (24h SLA)</option>
+            <option value="HIGH">High (48h SLA)</option>
+            <option value="MODERATE">Moderate (72h SLA)</option>
+            <option value="MINOR">Minor (96h SLA)</option>
+          </select>
+
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-xs text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer underline"
             >
-              Report Choke
-            </Button>
-          </div>
+              Reset
+            </button>
+          )}
+
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={loadData}
+            title="Refresh Data"
+            className="min-h-[36px] px-2.5"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-slate-600 ${loading ? 'animate-spin' : ''}`} />
+          </Button>
         </div>
-      </Card>
 
-      {/* GIS Map Canvas */}
+        {/* View Mode Switcher */}
+        <div className="flex items-center bg-white p-0.5 rounded-lg border border-slate-200 shrink-0">
+          <button
+            onClick={() => setViewMode('split')}
+            className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+              viewMode === 'split' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Split View
+          </button>
+          <button
+            onClick={() => setViewMode('map')}
+            className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+              viewMode === 'map' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Map Only
+          </button>
+          <button
+            onClick={() => setViewMode('table')}
+            className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+              viewMode === 'table' ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Table Only
+          </button>
+        </div>
+      </div>
+
+      {/* 4. GIS Map Canvas */}
       {(viewMode === 'split' || viewMode === 'map') && (
-        <Card className="p-0 overflow-hidden relative shadow-sm">
+        <Card className="p-0 overflow-hidden relative shadow-2xs">
           <div
             ref={mapContainerRef}
             className={`w-full transition-all duration-300 ${
-              viewMode === 'map' ? 'h-[620px]' : 'h-[460px]'
+              viewMode === 'map' ? 'h-[600px]' : 'h-[440px]'
             }`}
           />
 
           {/* Floating Map Legend */}
-          <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200/90 p-3 rounded-xl shadow-lg text-xs max-w-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-2">
-              <span className="font-semibold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-sky-600" />
+          <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3 rounded-lg shadow-sm text-xs max-w-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-1 mb-2">
+              <span className="font-semibold text-slate-900 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-slate-500" />
                 <span>Spatial Legend</span>
               </span>
               <button
                 onClick={() => setLegendOpen(!legendOpen)}
-                className="text-[11px] text-slate-500 hover:text-slate-900 cursor-pointer font-medium"
+                className="text-[11px] text-slate-400 hover:text-slate-700 cursor-pointer"
               >
                 {legendOpen ? 'Hide' : 'Show'}
               </button>
             </div>
 
             {legendOpen && (
-              <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+              <div className="space-y-1.5">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-600 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-rose-600 inline-block" />
                     <span className="text-slate-700">SLA Escalated</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
                     <span className="text-slate-700">Reported</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-slate-600 inline-block" />
                     <span className="text-slate-700">Crew on Site</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" />
                     <span className="text-slate-700">Flow Restored</span>
                   </div>
                 </div>
-                <p className="text-[10px] text-slate-500 border-t border-slate-100 pt-1.5 leading-relaxed">
-                  Dashed polygons indicate Kochi Municipal wards. Clicking any ward filters active reports.
-                </p>
               </div>
             )}
           </div>
         </Card>
       )}
 
-      {/* Reports Registry Data Grid */}
+      {/* 5. Grievance Registry Table: Restructured 2-line layout, generous whitespace */}
       {(viewMode === 'split' || viewMode === 'table') && (
         <Card className="overflow-hidden">
           <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-xs text-slate-900 tracking-wide uppercase">
-                Active Grievance Registry
+              <h3 className="font-semibold text-xs text-slate-900 tracking-wider uppercase">
+                Grievance &amp; Redressal Registry
               </h3>
-              <Badge variant="outline" className="font-mono text-[11px]">
+              <Badge variant="neutral" className="font-mono text-[11px]">
                 {reports.length} matching
               </Badge>
             </div>
-            <span className="text-xs text-slate-500 font-mono">
-              Live updates linked to LSGD engineering dispatch
+            <span className="text-xs text-slate-400 font-mono">
+              Live telemetry linked to LSGD Engineering Wing
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-100/50 text-slate-600 font-semibold text-[11px] uppercase tracking-wider">
-                  <th className="py-3 px-4">Ticket</th>
-                  <th className="py-3 px-4">Ward &amp; Canal Corridor</th>
+                <tr className="border-b border-slate-200 bg-slate-100/50 text-slate-500 font-semibold text-[11px] uppercase tracking-wider">
+                  <th className="py-3 px-4">Ticket &amp; Ward</th>
+                  <th className="py-3 px-4">Canal Corridor</th>
                   <th className="py-3 px-4">Obstruction Nature</th>
-                  <th className="py-3 px-4">Current Status</th>
-                  <th className="py-3 px-4">SLA Target</th>
-                  <th className="py-3 px-4">Responsible Unit</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">SLA Deadline</th>
+                  <th className="py-3 px-4">Assigned Authority</th>
                   <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
@@ -571,7 +553,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                         <AlertTriangle className="w-6 h-6 text-slate-400 mx-auto" />
                         <p className="font-semibold text-slate-800 text-sm">No grievances found</p>
                         <p className="text-xs text-slate-500">
-                          Try adjusting your search criteria or resetting applied filters.
+                          Try adjusting your search criteria or resetting filters.
                         </p>
                         {hasActiveFilters && (
                           <Button
@@ -593,46 +575,41 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                     return (
                       <tr
                         key={r.id}
-                        className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                        className="hover:bg-slate-50/70 transition-colors cursor-pointer group"
                         onClick={() => onSelectTicket(r.id)}
                       >
-                        {/* Ticket ID */}
-                        <td className="py-3 px-4 font-mono font-medium text-slate-900 whitespace-nowrap">
-                          {r.id}
+                        {/* 1. Ticket & Ward: Bold mono ticket + clear ward name */}
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <div className="font-mono font-bold text-slate-950 text-xs tracking-tight">
+                            {r.id}
+                          </div>
+                          <div className="text-[11px] font-medium text-slate-600 mt-0.5">
+                            Ward {r.ward_number} &bull; {r.ward_name}
+                          </div>
                         </td>
 
-                        {/* Ward & Canal */}
-                        <td className="py-3 px-4">
-                          <div className="font-semibold text-slate-900">
-                            Ward {r.ward_number} - {r.ward_name}
-                          </div>
-                          <div className="text-[11px] text-slate-500 truncate max-w-xs">
+                        {/* 2. Canal Corridor: Basin + Landmark */}
+                        <td className="py-3.5 px-4">
+                          <div className="font-medium text-slate-900 text-xs">
                             {r.canal_basin}
                           </div>
+                          <div className="text-[11px] text-slate-400 truncate max-w-xs mt-0.5">
+                            {r.landmark || r.address}
+                          </div>
                         </td>
 
-                        {/* Obstruction Nature */}
-                        <td className="py-3 px-4">
-                          <div className="font-medium text-slate-800">
+                        {/* 3. Obstruction Nature & Subordinate Hazard Tag */}
+                        <td className="py-3.5 px-4">
+                          <div className="font-medium text-slate-900 text-xs">
                             {r.blockage_type.replace(/_/g, ' ')}
                           </div>
-                          <div className="mt-0.5">
-                            <span
-                              className={`text-[10px] font-bold ${
-                                r.severity === 'CRITICAL'
-                                  ? 'text-rose-600'
-                                  : r.severity === 'HIGH'
-                                  ? 'text-amber-600'
-                                  : 'text-slate-500'
-                              }`}
-                            >
-                              {r.severity} HAZARD
-                            </span>
+                          <div className="mt-1">
+                            <HazardTag severity={r.severity} />
                           </div>
                         </td>
 
-                        {/* Status badge */}
-                        <td className="py-3 px-4 whitespace-nowrap">
+                        {/* 4. Primary Status Badge */}
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           <Badge
                             variant={
                               r.status.startsWith('ESCALATED')
@@ -649,32 +626,32 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                           </Badge>
                         </td>
 
-                        {/* SLA */}
-                        <td className="py-3 px-4 whitespace-nowrap font-mono text-xs">
+                        {/* 5. SLA Deadline */}
+                        <td className="py-3.5 px-4 whitespace-nowrap font-mono text-xs">
                           {r.status === 'RESOLVED' ? (
-                            <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                            <span className="text-emerald-800 font-medium flex items-center gap-1">
                               <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>De-silted</span>
+                              <span>Restored</span>
                             </span>
                           ) : (
                             <span
                               className={`inline-flex items-center gap-1 ${
-                                isOverdue ? 'text-rose-600 font-bold' : 'text-slate-600'
+                                isOverdue ? 'text-rose-700 font-bold' : 'text-slate-600'
                               }`}
                             >
                               <Clock className="w-3.5 h-3.5" />
-                              <span>{isOverdue ? 'OVERDUE' : `${r.sla_duration_hours}h SLA`}</span>
+                              <span>{isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h Target`}</span>
                             </span>
                           )}
                         </td>
 
-                        {/* Authority */}
-                        <td className="py-3 px-4 text-slate-600 truncate max-w-xs">
+                        {/* 6. Assigned Authority */}
+                        <td className="py-3.5 px-4 text-slate-600 truncate max-w-xs text-xs">
                           {r.assigned_crew || r.authority_name}
                         </td>
 
-                        {/* Action button */}
-                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                        {/* 7. Action button */}
+                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
                           <Button
                             variant="secondary"
                             size="sm"

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { fetchReports, updateReportStatus, uploadFile } from '../api';
 import type { Report } from '../types';
 import {
-  ShieldCheck,
   CheckCircle,
   Camera,
   RefreshCw,
@@ -14,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
-import { Badge } from './ui/Badge';
+import { Badge, HazardTag } from './ui/Badge';
 import { Modal } from './ui/Modal';
 import { Input } from './ui/Input';
 import { Select } from './ui/Select';
@@ -125,46 +124,43 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
   const resolvedCount = reports.filter((r) => r.status === 'RESOLVED').length;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      {/* Officer Credential Ribbon */}
-      <div className="rounded-xl border border-slate-800 bg-slate-950 text-white p-6 space-y-3 relative overflow-hidden shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 bg-sky-900/60 border border-sky-600/40 rounded-xl flex items-center justify-center text-sky-300 shrink-0">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase bg-sky-950 text-sky-300 border border-sky-800 px-2 py-0.5 rounded font-semibold">
-                  Field Triage Console
-                </span>
-                <span className="text-xs font-mono text-slate-400">Auth: Assistant Engineer</span>
-              </div>
-              <h1 className="text-base md:text-lg font-bold tracking-tight text-white mt-1">
-                Ward Engineering &amp; Quick-Response Triage Workstation
-              </h1>
-            </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      {/* Institutional Officer Header */}
+      <div className="border-b border-slate-200 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500">
+              LSGD KERALA &bull; DIVISION IV (KOCHI CENTRAL)
+            </span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200">
+              RESTRICTED ACCESS
+            </span>
           </div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
+            Ward Engineering &amp; Quick-Response Triage Workstation
+          </h1>
+          <p className="text-sm text-slate-600 mt-0.5">
+            Review unverified citizen drain blockages, dispatch de-silting maintenance crews, and verify flow restoration proofs.
+          </p>
+        </div>
 
-          <div className="flex items-center gap-3 text-xs">
-            <div className="bg-slate-900/90 border border-slate-800 px-4 py-2 rounded-xl text-right">
-              <span className="text-[10px] text-slate-400 block font-mono">Designated Engineer:</span>
-              <strong className="text-white font-semibold">{OFFICER_NAME}</strong>
-              <div className="text-xs text-slate-400">{OFFICER_ROLE}</div>
-            </div>
-          </div>
+        {/* Designated Officer Badge */}
+        <div className="bg-slate-50 border border-slate-200/80 px-3.5 py-2.5 rounded-lg text-left md:text-right shrink-0">
+          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Designated Field Engineer</span>
+          <div className="text-xs font-semibold text-slate-900">{OFFICER_NAME}</div>
+          <div className="text-[11px] text-slate-500">{OFFICER_ROLE}</div>
         </div>
       </div>
 
       {statusMsg && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-3.5 rounded-xl flex items-center gap-2 font-medium animate-in fade-in">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs p-3.5 rounded-lg flex items-center gap-2 font-medium">
           <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
           <span>{statusMsg}</span>
         </div>
       )}
 
       {/* Triage Queue Controls & Search Toolbar */}
-      <Card className="p-4 space-y-3">
+      <Card className="p-3.5 space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Status Queue Tabs */}
           <div className="flex flex-wrap items-center gap-1.5">
@@ -174,31 +170,35 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
               { id: 'IN_PROGRESS', label: 'Crews Deployed', count: reports.filter((r) => r.status === 'IN_PROGRESS').length },
               { id: 'ESCALATED', label: 'SLA Overdue', count: overdueCount, alert: true },
               { id: 'RESOLVED', label: 'Resolved & Restored', count: resolvedCount },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setSelectedStatus(tab.id)}
-                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                  selectedStatus === tab.id
-                    ? 'bg-slate-900 text-white shadow-xs font-semibold'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                    tab.alert && tab.count > 0
-                      ? 'bg-rose-600 text-white'
-                      : selectedStatus === tab.id
-                      ? 'bg-slate-800 text-slate-200'
-                      : 'bg-slate-200 text-slate-700'
+            ].map((tab) => {
+              const isActive = selectedStatus === tab.id;
+              const hasAlert = tab.alert && tab.count > 0;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setSelectedStatus(tab.id)}
+                  className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-slate-900 text-white font-medium shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  {tab.count}
-                </span>
-              </button>
-            ))}
+                  <span>{tab.label}</span>
+                  <span
+                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+                      hasAlert
+                        ? 'bg-rose-600 text-white'
+                        : isActive
+                        ? 'bg-slate-800 text-slate-200'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -214,12 +214,12 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
         </div>
 
         {/* Secondary Filter & Search Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2.5 border-t border-slate-100">
           <div className="flex flex-wrap items-center gap-2">
             <select
               value={selectedWard}
               onChange={(e) => setSelectedWard(e.target.value)}
-              className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:border-sky-600 cursor-pointer"
+              className="h-9 px-3 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 cursor-pointer"
             >
               <option value="">All Municipal Wards</option>
               <option value="W48">Ward 48 - Kadavanthra (T-P Canal)</option>
@@ -244,7 +244,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search ID, basin, street..."
-              className="w-full min-h-[38px] pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600"
+              className="w-full h-9 pl-8 pr-3 py-1 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -255,7 +255,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[11px] uppercase tracking-wider">
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-semibold text-[11px] uppercase tracking-wider font-mono">
                 <th className="py-3 px-4">Ticket</th>
                 <th className="py-3 px-4">Ward &amp; Basin</th>
                 <th className="py-3 px-4">Obstruction</th>
@@ -277,23 +277,22 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                   const isOverdue = new Date() > new Date(r.sla_deadline) && r.status !== 'RESOLVED';
 
                   return (
-                    <tr key={r.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4 font-mono font-semibold text-slate-900 whitespace-nowrap">
-                        {r.id}
+                    <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="font-mono font-semibold text-slate-900">{r.id}</div>
+                        <div className="text-[11px] text-slate-400 font-mono">
+                          {new Date(r.created_at).toLocaleDateString()}
+                        </div>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-900">Ward {r.ward_number}</div>
+                        <div className="font-semibold text-slate-900">Ward {r.ward_number} - {r.ward_name}</div>
                         <div className="text-[11px] text-slate-500 truncate max-w-xs">{r.canal_basin}</div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-medium text-slate-800">{r.blockage_type.replace(/_/g, ' ')}</div>
-                        <span
-                          className={`text-[10px] font-bold ${
-                            r.severity === 'CRITICAL' ? 'text-rose-600' : 'text-slate-500'
-                          }`}
-                        >
-                          {r.severity}
-                        </span>
+                        <div className="mt-0.5">
+                          <HazardTag severity={r.severity} />
+                        </div>
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap">
                         <Badge
@@ -304,6 +303,8 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                               ? 'in_progress'
                               : r.status === 'RESOLVED'
                               ? 'resolved'
+                              : r.status === 'INSPECTED'
+                              ? 'inspected'
                               : 'reported'
                           }
                           dot
@@ -313,16 +314,22 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap font-mono text-xs">
                         {r.status === 'RESOLVED' ? (
-                          <span className="text-emerald-700 font-medium">De-silted</span>
+                          <span className="text-emerald-700 font-medium flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> De-silted
+                          </span>
                         ) : (
-                          <span className={isOverdue ? 'text-rose-600 font-bold' : 'text-slate-600'}>
-                            <Clock className="w-3 h-3 inline mr-1" />
-                            {isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h`}
+                          <span className={`flex items-center gap-1 font-medium ${isOverdue ? 'text-rose-700 font-semibold' : 'text-slate-600'}`}>
+                            <Clock className="w-3.5 h-3.5" />
+                            {isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h remaining`}
                           </span>
                         )}
                       </td>
                       <td className="py-3 px-4 text-slate-600 truncate max-w-xs">
-                        {r.assigned_crew || 'Unassigned'}
+                        {r.assigned_crew ? (
+                          <span className="font-medium text-slate-800">{r.assigned_crew}</span>
+                        ) : (
+                          <span className="text-slate-400 italic">Unassigned</span>
+                        )}
                       </td>
                       <td className="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
                         <Button
@@ -363,21 +370,22 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
         >
           <div className="space-y-4">
             {/* Overview Box */}
-            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-lg border border-slate-200">
               <div>
-                <span className="text-slate-500 block text-[10px]">Location:</span>
+                <span className="text-slate-500 block text-[10px] uppercase font-mono tracking-wider">Location</span>
                 <span className="font-semibold text-slate-900">
                   Ward {activeReport.ward_number} ({activeReport.ward_name})
                 </span>
-                <div className="text-slate-600 text-[11px] truncate">{activeReport.landmark}</div>
+                <div className="text-slate-600 text-[11px] truncate mt-0.5">{activeReport.landmark}</div>
               </div>
               <div>
-                <span className="text-slate-500 block text-[10px]">Blockage Type:</span>
+                <span className="text-slate-500 block text-[10px] uppercase font-mono tracking-wider">Blockage Type</span>
                 <span className="font-semibold text-slate-900">
                   {activeReport.blockage_type.replace(/_/g, ' ')}
                 </span>
-                <div className="text-rose-700 font-bold text-[10px]">
-                  Severity: {activeReport.severity} ({activeReport.sla_duration_hours}h SLA)
+                <div className="mt-1">
+                  <HazardTag severity={activeReport.severity} />
+                  <span className="text-slate-500 font-mono text-[11px] ml-2">({activeReport.sla_duration_hours}h SLA)</span>
                 </div>
               </div>
             </div>
@@ -409,19 +417,19 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
                   placeholder="e.g. Mechanical excavator dispatched. 150m culvert cleaned of plastic waste. Silt hauled to designated disposal yard."
-                  className="w-full rounded-lg border border-slate-300 p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 resize-none"
+                  className="w-full rounded-lg border border-slate-200 p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 resize-none"
                   required
                 />
               </div>
 
               {/* Resolution Photo Upload */}
-              <div className="border border-slate-200 p-3.5 rounded-xl bg-slate-50 space-y-2">
+              <div className="border border-slate-200 p-3.5 rounded-lg bg-slate-50 space-y-2">
                 <span className="font-semibold text-slate-800 block text-xs">
                   Upload Completion / De-silting Proof Photo:
                 </span>
                 <div className="flex items-center gap-3">
-                  <label className="btn-secondary text-xs flex items-center gap-1.5 cursor-pointer">
-                    <Camera className="w-3.5 h-3.5" />
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer">
+                    <Camera className="w-3.5 h-3.5 text-slate-500" />
                     <span>Attach Photo Proof</span>
                     <input
                       type="file"
@@ -447,7 +455,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                         'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
                       )
                     }
-                    className="text-xs text-sky-700 hover:underline cursor-pointer"
+                    className="text-xs text-slate-600 hover:text-slate-900 underline cursor-pointer"
                   >
                     Load Sample Cleared Drain Photo (Reviewer demo)
                   </button>
