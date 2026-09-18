@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
+import { Sidebar } from './components/Sidebar';
 import { WardMap } from './components/WardMap';
 import { ReportForm } from './components/ReportForm';
 import { TicketTracker } from './components/TicketTracker';
 import { OfficerPortal } from './components/OfficerPortal';
 import { Leaderboard } from './components/Leaderboard';
-import { fetchStats } from './api';
-import type { Stats, Report } from './types';
+import type { Report } from './types';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<'map' | 'report' | 'track' | 'official' | 'leaderboard'>('map');
   const [selectedTicketId, setSelectedTicketId] = useState<string>('');
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Read URL query parameters on initial mount
   useEffect(() => {
@@ -25,15 +25,11 @@ export function App() {
     } else if (tab && ['map', 'report', 'track', 'official', 'leaderboard'].includes(tab)) {
       setCurrentTab(tab as any);
     }
-
-    // Fetch initial stats
-    fetchStats()
-      .then(setStats)
-      .catch((err) => console.error('Error loading initial stats:', err));
   }, []);
 
   const handleSelectTab = (tab: string) => {
     setCurrentTab(tab as any);
+    setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -47,44 +43,49 @@ export function App() {
   const handleReportSubmitted = (report: Report) => {
     setSelectedTicketId(report.id);
     setCurrentTab('track');
-    fetchStats().then(setStats).catch(() => {});
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans antialiased">
-      {/* Top Civic Navigation */}
-      <Navbar
+    <div className="min-h-screen flex flex-row bg-slate-50 text-slate-900 font-sans antialiased">
+      {/* Left Sidebar */}
+      <Sidebar
         currentTab={currentTab}
         onSelectTab={handleSelectTab}
-        activeCount={stats?.active_blockages || 0}
-        escalatedCount={stats?.escalated_count || 0}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {currentTab === 'map' && (
-          <WardMap
-            onSelectTicket={handleSelectTicketFromMap}
-            onNavigateToReport={() => handleSelectTab('report')}
-          />
-        )}
+      {/* Right: Top Header + Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+        {/* Top Operational Header */}
+        <Navbar onToggleSidebar={() => setSidebarOpen(true)} />
 
-        {currentTab === 'report' && (
-          <ReportForm onReportSubmitted={handleReportSubmitted} />
-        )}
+        {/* Page Content */}
+        <main className="flex-1 px-5 sm:px-7 py-6 overflow-y-auto">
+          {currentTab === 'map' && (
+            <WardMap
+              onSelectTicket={handleSelectTicketFromMap}
+              onNavigateToReport={() => handleSelectTab('report')}
+            />
+          )}
 
-        {currentTab === 'track' && (
-          <TicketTracker initialTicketId={selectedTicketId} />
-        )}
+          {currentTab === 'report' && (
+            <ReportForm onReportSubmitted={handleReportSubmitted} />
+          )}
 
-        {currentTab === 'official' && (
-          <OfficerPortal onSelectTicket={handleSelectTicketFromMap} />
-        )}
+          {currentTab === 'track' && (
+            <TicketTracker initialTicketId={selectedTicketId} />
+          )}
 
-        {currentTab === 'leaderboard' && (
-          <Leaderboard />
-        )}
-      </main>
+          {currentTab === 'official' && (
+            <OfficerPortal onSelectTicket={handleSelectTicketFromMap} />
+          )}
+
+          {currentTab === 'leaderboard' && (
+            <Leaderboard />
+          )}
+        </main>
+      </div>
     </div>
   );
 }

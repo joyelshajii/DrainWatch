@@ -8,12 +8,14 @@ import {
   PlusCircle,
   Clock,
   CheckCircle2,
-  ChevronRight,
   Info,
   AlertTriangle,
   FileText,
   AlertCircle,
   ShieldAlert,
+  MapPin,
+  FolderOpen,
+  MoreVertical,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Badge, HazardTag } from './ui/Badge';
@@ -288,29 +290,49 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
   return (
     <div className="space-y-6">
       {/* 1. Page Header matching reference design */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold tracking-widest uppercase bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded font-mono">
-              LSGD KERALA &bull; CHALLENGE SC-08
-            </span>
+      <div className="flex flex-col gap-4 pb-2">
+        {/* Top row: breadcrumb pill + Report button */}
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[10px] font-bold tracking-widest uppercase bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded font-mono">
+                LSGD KERALA &bull; CHALLENGE SC-08
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+              Kochi Canal &amp; Storm-Drain Redressal Grid
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5 max-w-2xl font-normal leading-relaxed">
+              Live public dispatch map and grievance tracking across 12 Kochi Municipal Corporation wards.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
-            Kochi Canal &amp; Storm-Drain Redressal Grid
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5 max-w-2xl font-normal leading-relaxed">
-            Live public dispatch map and grievance tracking across 12 Kochi Municipal Corporation wards.
-          </p>
+
+          {/* "For a Cleaner Kochi" italic callout + button */}
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <span className="hidden md:block text-right text-sm italic text-emerald-700 font-medium leading-tight">
+              For a Cleaner Kochi
+            </span>
+            <button
+              onClick={onNavigateToReport}
+              className="inline-flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-slate-950 shadow-xs cursor-pointer transition-colors"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Report Blockage</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={onNavigateToReport}
-            className="inline-flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-slate-950 shadow-xs cursor-pointer transition-colors"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Report Blockage</span>
-          </button>
+        {/* Civic pills row */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-xs font-medium">
+            📍 12 Wards
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-50 border border-violet-100 text-violet-700 text-xs font-medium">
+            👥 Citizen Powered
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-medium">
+            🍂 Cleaner &amp; Healthier Kochi
+          </span>
         </div>
       </div>
 
@@ -524,15 +546,17 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
         <Card className="overflow-hidden">
           <div className="px-5 py-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
+              <FolderOpen className="w-4 h-4 text-slate-400" />
               <h2 className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">
                 Grievance &amp; Redressal Registry
               </h2>
               <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-semibold">
                 {reports.length} matching
               </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
             <span className="text-[11px] text-slate-400 font-mono">
-              Live updates linked to LSGD Engineering Wing
+              Last updated: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}, {new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true })}
             </span>
           </div>
 
@@ -597,7 +621,8 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                           <div className="font-medium text-slate-900 text-xs">
                             {r.canal_basin}
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate max-w-xs mt-0.5">
+                          <div className="text-[11px] text-slate-400 truncate max-w-xs mt-0.5 flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-slate-300 shrink-0" />
                             {r.landmark || r.address}
                           </div>
                         </td>
@@ -654,20 +679,30 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                           {r.assigned_crew || r.authority_name}
                         </td>
 
-                        {/* 7. Action button */}
+                        {/* 7. Action buttons */}
                         <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSelectTicket(r.id);
-                            }}
-                            className="py-1 px-2.5 text-xs group-hover:border-slate-400"
-                          >
-                            <span>Inspect</span>
-                            <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </Button>
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectTicket(r.id);
+                              }}
+                              className="py-1 px-3 text-xs group-hover:border-slate-400"
+                            >
+                              View
+                            </Button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
