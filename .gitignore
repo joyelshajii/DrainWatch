@@ -5,6 +5,8 @@ dist/
 # Python virtual environment & cache
 venv/
 .env
+!frontend/.env
+!frontend/.env.example
 __pycache__/
 *.pyc
 

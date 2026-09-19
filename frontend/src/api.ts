@@ -1,6 +1,7 @@
 import type { GeoJSONFeatureCollection, Report, Stats, Ward, UserLeaderboardItem, AIAnalysisResult } from './types';
 
-const API_BASE = '/api';
+const API_URL = import.meta.env.VITE_API_URL || '';
+const API_BASE = API_URL ? `${API_URL.replace(/\/+$/, '')}/api` : '/api';
 
 export async function fetchWards(): Promise<GeoJSONFeatureCollection> {
   const res = await fetch(`${API_BASE}/wards`);
