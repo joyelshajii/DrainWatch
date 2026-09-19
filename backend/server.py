@@ -483,8 +483,13 @@ def get_reports():
     for r in reports:
         if ward_id and r.get("ward_id") != ward_id:
             continue
-        if status and r.get("status") != status:
-            continue
+        if status:
+            if status == "ACTIVE" and r.get("status") == "RESOLVED":
+                continue
+            elif status == "ESCALATED" and not r.get("status", "").startswith("ESCALATED"):
+                continue
+            elif status not in ["ACTIVE", "ESCALATED"] and r.get("status") != status:
+                continue
         if severity and r.get("severity") != severity:
             continue
         if search:
