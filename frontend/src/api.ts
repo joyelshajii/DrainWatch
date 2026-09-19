@@ -1,6 +1,9 @@
 import type { GeoJSONFeatureCollection, Report, Stats, Ward, UserLeaderboardItem, AIAnalysisResult } from './types';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+// In development or when running directly on localhost:8088 / 5173, use relative '/api'
+// When deployed on Vercel, use VITE_API_URL pointing to Render
+const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_URL = isLocalhost ? '' : (import.meta.env.VITE_API_URL || '');
 const API_BASE = API_URL ? `${API_URL.replace(/\/+$/, '')}/api` : '/api';
 
 export async function fetchWards(): Promise<GeoJSONFeatureCollection> {

@@ -2,6 +2,8 @@ flask
 flask-cors
 werkzeug
 tensorflow
+tf-keras
 numpy
 Pillow
 gunicorn
+

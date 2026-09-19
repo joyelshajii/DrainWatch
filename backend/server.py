@@ -19,8 +19,13 @@ AI_MODEL_AVAILABLE = False
 model = None
 
 try:
-    from tensorflow.keras.models import load_model
-    from tensorflow.keras.layers import DepthwiseConv2D
+    try:
+        import tf_keras as keras_loader
+        from tf_keras.models import load_model
+        from tf_keras.layers import DepthwiseConv2D
+    except ImportError:
+        from tensorflow.keras.models import load_model
+        from tensorflow.keras.layers import DepthwiseConv2D
 
     class CustomDepthwiseConv2D(DepthwiseConv2D):
         def __init__(self, **kwargs):
@@ -720,15 +725,15 @@ def analyze_image():
             pred_idx = int(np.argmax(preds, axis=1)[0])
             confidence = float(np.max(preds))
 
-            # labels: 0 clean, 1 polluted
-            if pred_idx == 1:
+            # Trained CNN labels: index 0: Clean / Clear Water, index 1: Polluted / Choked Drain
+            if pred_idx == 0:
+                category = "Clean Water / Unobstructed"
+                suggested_severity = "MINOR"
+                detected_blockage = "SILT_ACCUMULATION"
+            else:
                 category = "Polluted / Choked Canal"
                 suggested_severity = "HIGH" if confidence > 0.8 else "MODERATE"
                 detected_blockage = "PLASTIC_SOLID_WASTE"
-            else:
-                category = "Clean / Minor Silt"
-                suggested_severity = "MINOR"
-                detected_blockage = "SILT_ACCUMULATION"
         except Exception as e:
             print(f"[AI MODEL ERROR] {e}")
 
