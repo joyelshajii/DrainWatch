@@ -47,5 +47,12 @@
     "points": 10,
     "reports_count": 1,
     "badge": "Water Warden"
+  },
+  {
+    "name": "Concerned Resident",
+    "phone": "",
+    "points": 10,
+    "reports_count": 1,
+    "badge": "Water Warden"
   }
 ]

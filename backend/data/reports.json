@@ -1,5 +1,42 @@
 [
   {
+    "id": "KL-KCH-W48-2026-0109",
+    "created_at": "2026-09-19T22:05:30.003277Z",
+    "updated_at": "2026-09-19T22:05:30.003277Z",
+    "latitude": 9.9674,
+    "longitude": 76.2995,
+    "address": "missing coords",
+    "landmark": "",
+    "ward_id": "W48",
+    "ward_number": 48,
+    "ward_name": "Kadavanthra",
+    "zone": "Central Zone (Division IV)",
+    "local_body": "Kochi Municipal Corporation",
+    "canal_basin": "Thevara-Perandoor Canal Network",
+    "authority_name": "Er. Rajesh K. Nair (AE, LSGD Engineering Wing)",
+    "overseer": "Shri. Suresh Babu (First Grade Overseer)",
+    "health_inspector": "Shri. Manoj V. (Junior Health Inspector, Circle 5)",
+    "blockage_type": "PLASTIC_SOLID_WASTE",
+    "severity": "HIGH",
+    "description": "Canal obstruction reported.",
+    "photo_url": "",
+    "reporter_name": "Concerned Resident",
+    "reporter_phone": "",
+    "status": "REPORTED",
+    "sla_deadline": "2026-09-21T22:05:30.002108Z",
+    "sla_duration_hours": 48,
+    "escalation_level": 0,
+    "timeline": [
+      {
+        "timestamp": "2026-09-19T22:05:30.003277Z",
+        "status": "REPORTED",
+        "actor": "Concerned Resident",
+        "actor_role": "Citizen Reporter",
+        "description": "Grievance registered. Geotagged to Ward 48 (Kadavanthra) under Er. Rajesh K. Nair (AE, LSGD Engineering Wing). SLA deadline: 48 hours."
+      }
+    ]
+  },
+  {
     "id": "KL-KCH-W48-2026-0108",
     "created_at": "2026-09-19T21:50:52.754971Z",
     "updated_at": "2026-09-19T21:50:52.899982Z",

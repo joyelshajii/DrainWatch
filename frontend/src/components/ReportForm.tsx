@@ -296,7 +296,6 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
       });
 
       setSubmittedReport(newReport);
-      onReportSubmitted(newReport);
     } catch (err: any) {
       setErrorMsg('Failed to register blockage report: ' + (err.message || 'Server error'));
     } finally {
@@ -402,7 +401,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Button
                 variant="primary"
-                onClick={() => (window.location.href = `?ticket=${submittedReport.id}`)}
+                onClick={() => onReportSubmitted(submittedReport)}
                 icon={<ArrowRight className="w-4 h-4" />}
               >
                 Track Live SLA Status
