@@ -427,21 +427,20 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header: Clear hierarchy, reduced all-caps */}
+      {/* Header: Clear hierarchy, brief copy */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
-            Report Canal or Storm-Drain Obstruction
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
+            Report Canal or Drain Blockage
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
-            Upload photo proof and pinpoint coordinates. The system runs CNN computer vision verification,
-            identifies the responsible Kochi Municipal Corporation Ward, and issues an SLA-enforced grievance ticket.
+          <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl font-normal">
+            Upload photo proof and pinpoint location. The system auto-identifies your ward and creates a tracked ticket with statutory SLA.
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <Badge variant="neutral" dot className="font-mono text-xs">
-            GIS PIP Engine Active
+          <Badge variant="neutral" dot className="font-mono text-xs font-semibold">
+            GIS Engine Active
           </Badge>
         </div>
       </div>

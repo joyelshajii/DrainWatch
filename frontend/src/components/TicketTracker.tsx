@@ -140,45 +140,44 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header: Page scale */}
       <div className="border-b border-slate-200/80 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
           Track Grievance Ticket &amp; SLA Status
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl font-normal leading-relaxed">
-          Inspect real-time site verification findings, assigned quick-response squads, before-and-after photographic verification,
-          and administrative escalation hierarchy.
+        <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-3xl font-normal">
+          Inspect field verification findings, assigned squads, photographic proof, and statutory escalation tiers.
         </p>
       </div>
 
       {/* Search Toolbar: Standard white card container */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs space-y-3">
-        <form onSubmit={handleSearch} className="flex gap-2">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+        <form onSubmit={handleSearch} className="flex gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={ticketIdInput}
               onChange={(e) => setTicketIdInput(e.target.value)}
               placeholder="Enter ticket number (e.g. KL-KCH-W66-2026-0102)..."
-              className="w-full min-h-[38px] pl-9 pr-3 py-1.5 text-xs font-mono uppercase text-slate-900 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 placeholder:text-slate-400"
+              className="w-full min-h-[44px] pl-10 pr-4 py-2 text-xs sm:text-sm font-mono uppercase text-slate-900 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 placeholder:text-slate-400 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
           <Button
             type="submit"
             variant="primary"
             loading={loading}
-            size="sm"
-            icon={<Search className="w-3.5 h-3.5" />}
+            size="md"
+            icon={<Search className="w-4 h-4" />}
           >
             Track
           </Button>
         </form>
 
         {/* Quick Reviewer Samples */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200/60 text-xs">
-          <span className="text-[11px] font-medium text-slate-500">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs sm:text-sm">
+          <span className="font-semibold text-slate-600">
             Sample Tickets:
           </span>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {SAMPLE_TICKETS.map((t) => (
               <button
                 key={t.id}
@@ -187,7 +186,7 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
                   setTicketIdInput(t.id);
                   loadTicket(t.id);
                 }}
-                className={`text-xs px-2.5 py-0.5 rounded-md border transition-all cursor-pointer font-mono ${
+                className={`text-xs sm:text-sm px-3 py-1 rounded-lg border transition-all cursor-pointer font-mono font-medium ${
                   ticketIdInput === t.id
                     ? 'bg-slate-900 text-white border-slate-900'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'

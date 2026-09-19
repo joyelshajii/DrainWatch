@@ -1,5 +1,51 @@
 [
   {
+    "id": "KL-KCH-W48-2026-0107",
+    "created_at": "2026-09-19T21:01:39.881940Z",
+    "updated_at": "2026-09-19T21:01:39.881940Z",
+    "latitude": 9.9674,
+    "longitude": 76.2995,
+    "address": "Test Road",
+    "landmark": "Test Bridge",
+    "ward_id": "W48",
+    "ward_number": 48,
+    "ward_name": "Kadavanthra",
+    "zone": "Central Zone (Division IV)",
+    "local_body": "Kochi Municipal Corporation",
+    "canal_basin": "Thevara-Perandoor Canal Network",
+    "authority_name": "Er. Rajesh K. Nair (AE, LSGD Engineering Wing)",
+    "overseer": "Shri. Suresh Babu (First Grade Overseer)",
+    "health_inspector": "Shri. Manoj V. (Junior Health Inspector, Circle 5)",
+    "blockage_type": "PLASTIC_SOLID_WASTE",
+    "severity": "HIGH",
+    "description": "Test blockage",
+    "photo_url": "https://example.com/test.jpg",
+    "reporter_name": "Test User",
+    "reporter_phone": "9876543210",
+    "status": "ESCALATED_L1",
+    "sla_deadline": "2026-09-21T21:01:39.881029Z",
+    "sla_duration_hours": 48,
+    "escalation_level": 1,
+    "timeline": [
+      {
+        "timestamp": "2026-09-19T21:01:39.881940Z",
+        "status": "REPORTED",
+        "actor": "Test User",
+        "actor_role": "Citizen Reporter",
+        "description": "Grievance registered. Geotagged to Ward 48 (Kadavanthra) under Er. Rajesh K. Nair (AE, LSGD Engineering Wing). SLA deadline: 48 hours."
+      },
+      {
+        "timestamp": "2026-09-19T21:01:49.259624Z",
+        "status": "ESCALATED_L1",
+        "actor": "Test Citizen",
+        "actor_role": "Public Appellant",
+        "description": "Citizen appeal filed. Escalated to Level 1: Test escalation - stagnant water for 48+ hours"
+      }
+    ],
+    "escalated_at": "2026-09-19T21:01:49.259624Z",
+    "escalation_reason": "Test escalation - stagnant water for 48+ hours"
+  },
+  {
     "id": "KL-KCH-W48-2026-0106",
     "created_at": "2026-09-18T01:52:21.229234Z",
     "updated_at": "2026-09-18T01:52:27.374257Z",

@@ -21,24 +21,24 @@ export const Leaderboard: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="border-b border-slate-200/80 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500">
-              CIVIC ACTION &bull; KOCHI WATER WARDENS
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500">
+              Civic Action &bull; Kochi Water Wardens
             </span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
-            Citizen Action Leaderboard &amp; Desilting Champions
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
+            Citizen Action Leaderboard
           </h1>
-          <p className="text-sm text-slate-600 mt-0.5">
-            Recognizing Kochi residents and associations proactively reporting canal micro-chokes to prevent urban monsoon flooding.
+          <p className="text-sm sm:text-base text-slate-600 mt-1">
+            Recognizing residents proactively reporting choke points to prevent urban flooding.
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800">
-            <Award className="w-4 h-4 text-amber-600" />
+          <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-semibold text-slate-800 shadow-xs">
+            <Award className="w-4 h-4 text-amber-500" />
             <span>+10 Pts per Verified Report</span>
           </span>
         </div>

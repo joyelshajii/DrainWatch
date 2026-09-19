@@ -289,35 +289,32 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
 
   return (
     <div className="space-y-6">
-      {/* 1. Page Header matching reference design */}
+      {/* 1. Page Header matching Shopeers design: Crisp title, brief subtitle, right CTA */}
       <div className="flex flex-col gap-4 pb-1">
-        {/* Top row: breadcrumb pill + Report button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] font-bold tracking-widest uppercase bg-slate-100/90 text-slate-700 border border-slate-200/90 px-2.5 py-0.5 rounded-md font-mono">
-                LSGD KERALA &bull; CHALLENGE SC-08
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-semibold uppercase bg-slate-100 text-slate-700 border border-slate-200/90 px-2.5 py-0.5 rounded-lg font-mono">
+                Challenge SC-08
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live Telemetry
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-lg">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Live Telemetry Grid
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
               Kochi Canal &amp; Storm-Drain Redressal Grid
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
-              Spatial telemetry dispatch map and grievance tracking across 12 Kochi Municipal Corporation wards.
+            <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl font-normal">
+              Live blockage telemetry and dispatch across 12 Kochi Municipal wards.
             </p>
           </div>
 
-          {/* "For a Cleaner Kochi" callout + Report button */}
-          <div className="flex flex-col sm:items-end gap-2 shrink-0">
-            <span className="hidden md:block text-right text-xs italic text-emerald-700 font-medium leading-tight">
-              &ldquo;For a Cleaner, Flood-Resilient Kochi&rdquo;
-            </span>
+          {/* Quick CTA */}
+          <div className="flex items-center gap-3 shrink-0">
             <Button
               variant="primary"
+              size="md"
               onClick={onNavigateToReport}
               icon={<PlusCircle className="w-4 h-4 text-sky-400" />}
               className="shadow-sm hover:shadow"
@@ -327,15 +324,15 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           </div>
         </div>
 
-        {/* Civic pills row */}
+        {/* Quick status pills row */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50/80 border border-sky-100 text-sky-700 text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-800 text-xs sm:text-sm font-medium">
             📍 12 Wards Mapped
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50/80 border border-violet-100 text-violet-700 text-xs font-medium">
-            👥 Citizen Powered
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 text-violet-800 text-xs sm:text-sm font-medium">
+            👥 Citizen Reports
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/80 border border-emerald-100 text-emerald-700 text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs sm:text-sm font-medium">
             🍂 Pre-Monsoon Desilting
           </span>
         </div>
@@ -383,17 +380,17 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
       )}
 
       {/* 3. Utility Filter Bar in clean white card container */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2.5 flex-1">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3 flex-1">
           {/* Search */}
           <div className="relative min-w-[220px] flex-1 sm:flex-none">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search ticket, canal corridor, road..."
+              placeholder="Search ticket, canal, road..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full min-h-[38px] pl-9 pr-3.5 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 placeholder:text-slate-400 transition-all"
+              className="w-full min-h-[42px] pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 placeholder:text-slate-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
 
@@ -401,9 +398,9 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedWard}
             onChange={(e) => setSelectedWard(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
+            className="min-h-[42px] px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 cursor-pointer transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           >
-            <option value="">All Wards</option>
+            <option value="">All Wards (12)</option>
             <option value="W48">Ward 48 - Kadavanthra</option>
             <option value="W58">Ward 58 - Thevara</option>
             <option value="W42">Ward 42 - Vyttila</option>
@@ -422,11 +419,11 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
+            className="min-h-[42px] px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 cursor-pointer transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           >
             <option value="">All Statuses</option>
-            <option value="ACTIVE">All Active Grievances</option>
-            <option value="REPORTED">Reported / Pending</option>
+            <option value="ACTIVE">All Active</option>
+            <option value="REPORTED">Reported</option>
             <option value="INSPECTED">Inspected</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="ESCALATED">SLA Escalated</option>
@@ -437,7 +434,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedSeverity}
             onChange={(e) => setSelectedSeverity(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
+            className="min-h-[42px] px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 cursor-pointer transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           >
             <option value="">All Severities</option>
             <option value="CRITICAL">Critical (24h SLA)</option>
@@ -449,7 +446,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer font-medium underline underline-offset-2 transition-colors"
+              className="text-xs sm:text-sm text-slate-600 hover:text-slate-900 px-2.5 py-1.5 cursor-pointer font-semibold underline underline-offset-2 transition-colors"
             >
               Reset
             </button>
@@ -460,34 +457,34 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             size="sm"
             onClick={loadData}
             title="Refresh Data"
-            className="min-h-[38px] px-2.5"
+            className="min-h-[42px] px-3 rounded-xl"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-slate-600 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 text-slate-600 ${loading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
 
         {/* View Mode Switcher */}
-        <div className="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shrink-0">
+        <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
           <button
             onClick={() => setViewMode('split')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
-              viewMode === 'split' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'split' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Split View
           </button>
           <button
             onClick={() => setViewMode('map')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
-              viewMode === 'map' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'map' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Map Only
           </button>
           <button
             onClick={() => setViewMode('table')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
-              viewMode === 'table' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'table' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Table Only
@@ -546,46 +543,46 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
         </Card>
       )}
 
-      {/* 5. Grievance Registry Table: Clean 2-line layout, generous whitespace */}
+      {/* 5. Grievance Registry Table: Clean Shopeers table layout */}
       {(viewMode === 'split' || viewMode === 'table') && (
         <Card className="overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-2">
+          <div className="px-6 py-4 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <FolderOpen className="w-4 h-4 text-slate-400" />
-              <h2 className="font-bold text-xs text-slate-900 tracking-wider uppercase font-mono">
+              <FolderOpen className="w-5 h-5 text-slate-500" />
+              <h2 className="font-bold text-sm sm:text-base text-slate-900 tracking-tight font-sans">
                 Grievance &amp; Redressal Registry
               </h2>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-semibold">
+              <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200 font-semibold">
                 {reports.length} matching
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <span className="text-[11px] text-slate-400 font-mono">
-              Last updated: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}, {new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true })}
+            <span className="text-xs text-slate-400 font-sans">
+              Live updates active
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs sm:text-sm border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/70 text-slate-500 font-semibold text-[11px] uppercase tracking-wider font-mono">
-                  <th className="py-3.5 px-5">Ticket &amp; Ward</th>
-                  <th className="py-3.5 px-5">Canal Corridor</th>
-                  <th className="py-3.5 px-5">Obstruction Nature</th>
-                  <th className="py-3.5 px-5">Status</th>
-                  <th className="py-3.5 px-5">SLA Deadline</th>
-                  <th className="py-3.5 px-5">Assigned Authority</th>
-                  <th className="py-3.5 px-5 text-right">Action</th>
+                <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-600 font-semibold text-xs uppercase tracking-wider font-sans">
+                  <th className="py-4 px-6">Ticket &amp; Ward</th>
+                  <th className="py-4 px-6">Corridor</th>
+                  <th className="py-4 px-6">Obstruction</th>
+                  <th className="py-4 px-6">Status</th>
+                  <th className="py-4 px-6">SLA Target</th>
+                  <th className="py-4 px-6">Assigned Squad</th>
+                  <th className="py-4 px-6 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {reports.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 px-5 text-center">
+                    <td colSpan={7} className="py-14 px-6 text-center">
                       <div className="max-w-sm mx-auto text-slate-500 space-y-2">
-                        <AlertTriangle className="w-6 h-6 text-slate-400 mx-auto" />
-                        <p className="font-semibold text-slate-800 text-sm">No grievances found</p>
-                        <p className="text-xs text-slate-500">
+                        <AlertTriangle className="w-7 h-7 text-slate-400 mx-auto" />
+                        <p className="font-semibold text-slate-800 text-base">No grievances found</p>
+                        <p className="text-xs sm:text-sm text-slate-500">
                           Try adjusting your search criteria or resetting filters.
                         </p>
                         {hasActiveFilters && (
@@ -593,7 +590,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                             variant="secondary"
                             size="sm"
                             onClick={clearFilters}
-                            className="mt-2"
+                            className="mt-3"
                           >
                             Clear All Filters
                           </Button>
@@ -608,33 +605,33 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                     return (
                       <tr
                         key={r.id}
-                        className="hover:bg-slate-50/70 transition-colors cursor-pointer group"
+                        className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                         onClick={() => onSelectTicket(r.id)}
                       >
-                        {/* 1. Ticket & Ward: Bold mono ticket + clear ward name */}
-                        <td className="py-3.5 px-5 whitespace-nowrap">
-                          <div className="font-mono font-bold text-slate-950 text-xs tracking-tight">
+                        {/* 1. Ticket & Ward */}
+                        <td className="py-4 px-6 whitespace-nowrap">
+                          <div className="font-mono font-bold text-slate-900 text-xs sm:text-sm">
                             {r.id}
                           </div>
-                          <div className="text-[11px] font-medium text-slate-600 mt-0.5">
+                          <div className="text-xs text-slate-600 mt-0.5 font-medium">
                             Ward {r.ward_number} &bull; {r.ward_name}
                           </div>
                         </td>
 
-                        {/* 2. Canal Corridor: Basin + Landmark */}
-                        <td className="py-3.5 px-5">
-                          <div className="font-medium text-slate-900 text-xs">
+                        {/* 2. Canal Corridor */}
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-slate-900 text-xs sm:text-sm">
                             {r.canal_basin}
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate max-w-xs mt-0.5 flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-slate-300 shrink-0" />
+                          <div className="text-xs text-slate-400 truncate max-w-xs mt-0.5 flex items-center gap-1.5">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                             {r.landmark || r.address}
                           </div>
                         </td>
 
-                        {/* 3. Obstruction Nature & Subordinate Hazard Tag */}
-                        <td className="py-3.5 px-5">
-                          <div className="font-medium text-slate-900 text-xs">
+                        {/* 3. Obstruction */}
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-slate-900 text-xs sm:text-sm">
                             {r.blockage_type.replace(/_/g, ' ')}
                           </div>
                           <div className="mt-1">
@@ -643,7 +640,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                         </td>
 
                         {/* 4. Primary Status Badge */}
-                        <td className="py-3.5 px-5 whitespace-nowrap">
+                        <td className="py-4 px-6 whitespace-nowrap">
                           <Badge
                             variant={
                               r.status.startsWith('ESCALATED')
@@ -661,32 +658,32 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                         </td>
 
                         {/* 5. SLA Deadline */}
-                        <td className="py-3.5 px-5 whitespace-nowrap font-mono text-xs">
+                        <td className="py-4 px-6 whitespace-nowrap font-sans text-xs sm:text-sm">
                           {r.status === 'RESOLVED' ? (
-                            <span className="text-emerald-800 font-medium flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span className="text-emerald-800 font-semibold flex items-center gap-1.5">
+                              <CheckCircle2 className="w-4 h-4" />
                               <span>Restored</span>
                             </span>
                           ) : (
                             <span
-                              className={`inline-flex items-center gap-1 ${
-                                isOverdue ? 'text-rose-700 font-bold' : 'text-slate-600'
+                              className={`inline-flex items-center gap-1.5 font-medium ${
+                                isOverdue ? 'text-rose-700 font-bold' : 'text-slate-700'
                               }`}
                             >
-                              <Clock className="w-3.5 h-3.5" />
+                              <Clock className="w-4 h-4 text-slate-400" />
                               <span>{isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h Target`}</span>
                             </span>
                           )}
                         </td>
 
                         {/* 6. Assigned Authority */}
-                        <td className="py-3.5 px-5 text-slate-600 truncate max-w-xs text-xs">
+                        <td className="py-4 px-6 text-slate-700 truncate max-w-xs text-xs sm:text-sm font-medium">
                           {r.assigned_crew || r.authority_name}
                         </td>
 
                         {/* 7. Action buttons */}
-                        <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-1">
+                        <td className="py-4 px-6 text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1.5">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -694,7 +691,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                                 e.stopPropagation();
                                 onSelectTicket(r.id);
                               }}
-                              className="py-1 px-3 text-xs group-hover:border-slate-400"
+                              className="py-1 px-3.5 text-xs sm:text-sm font-semibold"
                             >
                               View
                             </Button>
@@ -703,7 +700,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}
-                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                             >
                               <MoreVertical className="w-4 h-4" />
                             </button>

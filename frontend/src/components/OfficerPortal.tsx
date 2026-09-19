@@ -126,50 +126,50 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Institutional Officer Header */}
-      <div className="border-b border-slate-200 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border-b border-slate-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500">
-              LSGD KERALA &bull; DIVISION IV (KOCHI CENTRAL)
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
+              LSGD Kerala &bull; Division IV (Kochi Central)
             </span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200">
-              RESTRICTED ACCESS
+            <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200">
+              Restricted Access
             </span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">
-            Ward Engineering &amp; Quick-Response Triage Workstation
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
+            Officer Triage &amp; Quick-Response Workstation
           </h1>
-          <p className="text-sm text-slate-600 mt-0.5">
-            Review unverified citizen drain blockages, dispatch de-silting maintenance crews, and verify flow restoration proofs.
+          <p className="text-sm sm:text-base text-slate-600 mt-1">
+            Review unverified blockages, dispatch maintenance squads, and confirm flow restoration proofs.
           </p>
         </div>
 
         {/* Designated Officer Badge */}
-        <div className="bg-slate-50 border border-slate-200/80 px-3.5 py-2.5 rounded-lg text-left md:text-right shrink-0">
-          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Designated Field Engineer</span>
-          <div className="text-xs font-semibold text-slate-900">{OFFICER_NAME}</div>
-          <div className="text-[11px] text-slate-500">{OFFICER_ROLE}</div>
+        <div className="bg-white border border-slate-200 p-4 rounded-2xl text-left md:text-right shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block font-mono">Designated Field Engineer</span>
+          <div className="text-sm sm:text-base font-bold text-slate-900 mt-0.5">{OFFICER_NAME}</div>
+          <div className="text-xs sm:text-sm text-slate-500 font-medium">{OFFICER_ROLE}</div>
         </div>
       </div>
 
       {statusMsg && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs p-3.5 rounded-lg flex items-center gap-2 font-medium">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm p-4 rounded-xl flex items-center gap-2.5 font-medium">
+          <CheckCircle className="w-5 h-5 shrink-0 text-emerald-600" />
           <span>{statusMsg}</span>
         </div>
       )}
 
       {/* Triage Queue Controls & Search Toolbar */}
-      <Card className="p-3.5 space-y-3">
+      <Card className="p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Status Queue Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             {[
               { id: '', label: 'All Incidents', count: reports.length },
-              { id: 'REPORTED', label: 'New / Unverified', count: reports.filter((r) => r.status === 'REPORTED').length },
+              { id: 'REPORTED', label: 'Unverified', count: reports.filter((r) => r.status === 'REPORTED').length },
               { id: 'IN_PROGRESS', label: 'Crews Deployed', count: reports.filter((r) => r.status === 'IN_PROGRESS').length },
               { id: 'ESCALATED', label: 'SLA Overdue', count: overdueCount, alert: true },
-              { id: 'RESOLVED', label: 'Resolved & Restored', count: resolvedCount },
+              { id: 'RESOLVED', label: 'Resolved', count: resolvedCount },
             ].map((tab) => {
               const isActive = selectedStatus === tab.id;
               const hasAlert = tab.alert && tab.count > 0;
@@ -178,20 +178,20 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                   key={tab.id}
                   type="button"
                   onClick={() => setSelectedStatus(tab.id)}
-                  className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+                  className={`text-xs sm:text-sm px-3.5 py-2 rounded-xl font-medium transition-all cursor-pointer flex items-center gap-2 ${
                     isActive
-                      ? 'bg-slate-900 text-white font-medium shadow-xs'
+                      ? 'bg-slate-900 text-white font-semibold shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <span>{tab.label}</span>
                   <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+                    className={`text-xs font-mono px-2 py-0.5 rounded-full font-semibold ${
                       hasAlert
                         ? 'bg-rose-600 text-white'
                         : isActive
                         ? 'bg-slate-800 text-slate-200'
-                        : 'bg-slate-100 text-slate-600'
+                        : 'bg-slate-100 text-slate-700'
                     }`}
                   >
                     {tab.count}
@@ -206,7 +206,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
               variant="secondary"
               size="sm"
               onClick={loadReports}
-              icon={<RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />}
+              icon={<RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />}
             >
               Refresh
             </Button>
@@ -214,12 +214,12 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
         </div>
 
         {/* Secondary Filter & Search Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2.5 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
           <div className="flex flex-wrap items-center gap-2">
             <select
               value={selectedWard}
               onChange={(e) => setSelectedWard(e.target.value)}
-              className="h-9 px-3 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 cursor-pointer"
+              className="min-h-[42px] px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             >
               <option value="">All Municipal Wards</option>
               <option value="W48">Ward 48 - Kadavanthra (T-P Canal)</option>
@@ -237,14 +237,14 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
             </select>
           </div>
 
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search ID, basin, street..."
-              className="w-full h-9 pl-8 pr-3 py-1 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 placeholder:text-slate-400"
+              className="w-full min-h-[42px] pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 placeholder:text-slate-400 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
         </div>
@@ -253,22 +253,22 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
       {/* Triage Queue Table */}
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-xs sm:text-sm border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 font-semibold text-[11px] uppercase tracking-wider font-mono">
-                <th className="py-3.5 px-5">Ticket</th>
-                <th className="py-3.5 px-5">Ward &amp; Basin</th>
-                <th className="py-3.5 px-5">Obstruction</th>
-                <th className="py-3.5 px-5">Status</th>
-                <th className="py-3.5 px-5">SLA Countdown</th>
-                <th className="py-3.5 px-5">Field Squad</th>
-                <th className="py-3.5 px-5 text-right">Actions</th>
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-600 font-semibold text-xs uppercase tracking-wider font-sans">
+                <th className="py-4 px-6">Ticket</th>
+                <th className="py-4 px-6">Ward &amp; Basin</th>
+                <th className="py-4 px-6">Obstruction</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6">SLA Countdown</th>
+                <th className="py-4 px-6">Field Squad</th>
+                <th className="py-4 px-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 px-5 text-center text-slate-500">
+                  <td colSpan={7} className="py-14 px-6 text-center text-slate-500 font-medium">
                     No grievance records match the current filter.
                   </td>
                 </tr>
@@ -277,24 +277,24 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                   const isOverdue = new Date() > new Date(r.sla_deadline) && r.status !== 'RESOLVED';
 
                   return (
-                    <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3.5 px-5 whitespace-nowrap">
-                        <div className="font-mono font-semibold text-slate-900">{r.id}</div>
-                        <div className="text-[11px] text-slate-400 font-mono">
+                    <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <div className="font-mono font-bold text-slate-900 text-xs sm:text-sm">{r.id}</div>
+                        <div className="text-xs text-slate-400 font-sans mt-0.5">
                           {new Date(r.created_at).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="py-3.5 px-5">
-                        <div className="font-semibold text-slate-900">Ward {r.ward_number} - {r.ward_name}</div>
-                        <div className="text-[11px] text-slate-500 truncate max-w-xs">{r.canal_basin}</div>
+                      <td className="py-4 px-6">
+                        <div className="font-semibold text-slate-900 text-xs sm:text-sm">Ward {r.ward_number} - {r.ward_name}</div>
+                        <div className="text-xs text-slate-500 truncate max-w-xs mt-0.5">{r.canal_basin}</div>
                       </td>
-                      <td className="py-3.5 px-5">
-                        <div className="font-medium text-slate-800">{r.blockage_type.replace(/_/g, ' ')}</div>
-                        <div className="mt-0.5">
+                      <td className="py-4 px-6">
+                        <div className="font-medium text-slate-900 text-xs sm:text-sm">{r.blockage_type.replace(/_/g, ' ')}</div>
+                        <div className="mt-1">
                           <HazardTag severity={r.severity} />
                         </div>
                       </td>
-                      <td className="py-3.5 px-5 whitespace-nowrap">
+                      <td className="py-4 px-6 whitespace-nowrap">
                         <Badge
                           variant={
                             r.status.startsWith('ESCALATED')
@@ -312,31 +312,31 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                           {r.status.replace(/_/g, ' ')}
                         </Badge>
                       </td>
-                      <td className="py-3.5 px-5 whitespace-nowrap font-mono text-xs">
+                      <td className="py-4 px-6 whitespace-nowrap font-sans text-xs sm:text-sm">
                         {r.status === 'RESOLVED' ? (
-                          <span className="text-emerald-700 font-medium flex items-center gap-1">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> De-silted
+                          <span className="text-emerald-800 font-semibold flex items-center gap-1.5">
+                            <CheckCircle2 className="w-4 h-4" /> Restored
                           </span>
                         ) : (
-                          <span className={`flex items-center gap-1 font-medium ${isOverdue ? 'text-rose-700 font-semibold' : 'text-slate-600'}`}>
-                            <Clock className="w-3.5 h-3.5" />
-                            {isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h remaining`}
+                          <span className={`flex items-center gap-1.5 font-medium ${isOverdue ? 'text-rose-700 font-bold' : 'text-slate-700'}`}>
+                            <Clock className="w-4 h-4 text-slate-400" />
+                            {isOverdue ? 'BREACHED' : `${r.sla_duration_hours}h target`}
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-5 text-slate-600 truncate max-w-xs">
+                      <td className="py-4 px-6 text-slate-700 truncate max-w-xs text-xs sm:text-sm font-medium">
                         {r.assigned_crew ? (
-                          <span className="font-medium text-slate-800">{r.assigned_crew}</span>
+                          <span className="font-semibold text-slate-900">{r.assigned_crew}</span>
                         ) : (
-                          <span className="text-slate-400 italic">Unassigned</span>
+                          <span className="text-slate-400 italic font-normal">Unassigned</span>
                         )}
                       </td>
-                      <td className="py-3.5 px-5 text-right whitespace-nowrap space-x-1.5">
+                      <td className="py-4 px-6 text-right whitespace-nowrap space-x-2">
                         <Button
                           variant="secondary"
                           size="sm"
                           onClick={() => onSelectTicket(r.id)}
-                          className="py-1 px-2.5 text-xs"
+                          className="py-1 px-3 text-xs sm:text-sm font-semibold"
                         >
                           <Eye className="w-3.5 h-3.5 mr-1" />
                           <span>View</span>
@@ -345,7 +345,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                           variant="primary"
                           size="sm"
                           onClick={() => handleOpenActionModal(r)}
-                          className="py-1 px-2.5 text-xs"
+                          className="py-1 px-3 text-xs sm:text-sm font-semibold"
                         >
                           <Edit className="w-3.5 h-3.5 mr-1" />
                           <span>Dispatch</span>
