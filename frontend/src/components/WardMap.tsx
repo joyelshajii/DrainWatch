@@ -290,48 +290,53 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
   return (
     <div className="space-y-6">
       {/* 1. Page Header matching reference design */}
-      <div className="flex flex-col gap-4 pb-2">
+      <div className="flex flex-col gap-4 pb-1">
         {/* Top row: breadcrumb pill + Report button */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] font-bold tracking-widest uppercase bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded font-mono">
+              <span className="text-[10px] font-bold tracking-widest uppercase bg-slate-100/90 text-slate-700 border border-slate-200/90 px-2.5 py-0.5 rounded-md font-mono">
                 LSGD KERALA &bull; CHALLENGE SC-08
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live Telemetry
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
               Kochi Canal &amp; Storm-Drain Redressal Grid
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-0.5 max-w-2xl font-normal leading-relaxed">
-              Live public dispatch map and grievance tracking across 12 Kochi Municipal Corporation wards.
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
+              Spatial telemetry dispatch map and grievance tracking across 12 Kochi Municipal Corporation wards.
             </p>
           </div>
 
-          {/* "For a Cleaner Kochi" italic callout + button */}
-          <div className="flex flex-col items-end gap-2 shrink-0">
-            <span className="hidden md:block text-right text-sm italic text-emerald-700 font-medium leading-tight">
-              For a Cleaner Kochi
+          {/* "For a Cleaner Kochi" callout + Report button */}
+          <div className="flex flex-col sm:items-end gap-2 shrink-0">
+            <span className="hidden md:block text-right text-xs italic text-emerald-700 font-medium leading-tight">
+              &ldquo;For a Cleaner, Flood-Resilient Kochi&rdquo;
             </span>
-            <button
+            <Button
+              variant="primary"
               onClick={onNavigateToReport}
-              className="inline-flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-slate-950 shadow-xs cursor-pointer transition-colors"
+              icon={<PlusCircle className="w-4 h-4 text-sky-400" />}
+              className="shadow-sm hover:shadow"
             >
-              <PlusCircle className="w-4 h-4" />
               <span>Report Blockage</span>
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Civic pills row */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-xs font-medium">
-            📍 12 Wards
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50/80 border border-sky-100 text-sky-700 text-xs font-medium">
+            📍 12 Wards Mapped
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-50 border border-violet-100 text-violet-700 text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50/80 border border-violet-100 text-violet-700 text-xs font-medium">
             👥 Citizen Powered
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-medium">
-            🍂 Cleaner &amp; Healthier Kochi
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/80 border border-emerald-100 text-emerald-700 text-xs font-medium">
+            🍂 Pre-Monsoon Desilting
           </span>
         </div>
       </div>
@@ -344,7 +349,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             value={stats.total_reports}
             subtext="tickets filed"
             secondaryText="Kochi Municipal Jurisdiction"
-            icon={<FileText className="w-4 h-4" />}
+            icon={<FileText className="w-5 h-5" />}
             accent="neutral"
           />
 
@@ -353,7 +358,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             value={stats.active_blockages}
             subtext="unresolved"
             secondaryText={`${stats.in_progress} crew(s) actively deployed`}
-            icon={<AlertCircle className="w-4 h-4" />}
+            icon={<AlertCircle className="w-5 h-5" />}
             accent="pending"
           />
 
@@ -362,7 +367,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             value={stats.escalated_count}
             subtext="breached SLA"
             secondaryText={`${stats.critical_flood_risk} high flood risk zone(s)`}
-            icon={<ShieldAlert className="w-4 h-4" />}
+            icon={<ShieldAlert className="w-5 h-5" />}
             accent="critical"
           />
 
@@ -371,24 +376,24 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
             value={stats.resolved}
             subtext="flow restored"
             secondaryText={`Avg resolution: ${stats.avg_resolution_hours.toFixed(1)}h`}
-            icon={<CheckCircle2 className="w-4 h-4" />}
+            icon={<CheckCircle2 className="w-5 h-5" />}
             accent="resolved"
           />
         </div>
       )}
 
       {/* 3. Utility Filter Bar in clean white card container */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-3 shadow-2xs flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2 flex-1">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1">
           {/* Search */}
-          <div className="relative min-w-[200px] flex-1 sm:flex-none">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="relative min-w-[220px] flex-1 sm:flex-none">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search ticket, canal, road..."
+              placeholder="Search ticket, canal corridor, road..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full min-h-[38px] pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 placeholder:text-slate-400"
+              className="w-full min-h-[38px] pl-9 pr-3.5 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 placeholder:text-slate-400 transition-all"
             />
           </div>
 
@@ -396,7 +401,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedWard}
             onChange={(e) => setSelectedWard(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 cursor-pointer"
+            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
           >
             <option value="">All Wards</option>
             <option value="W48">Ward 48 - Kadavanthra</option>
@@ -417,7 +422,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 cursor-pointer"
+            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
           >
             <option value="">All Statuses</option>
             <option value="ACTIVE">All Active Grievances</option>
@@ -432,7 +437,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           <select
             value={selectedSeverity}
             onChange={(e) => setSelectedSeverity(e.target.value)}
-            className="min-h-[38px] px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 cursor-pointer"
+            className="min-h-[38px] px-3 py-1.5 text-xs rounded-xl border border-slate-200/90 bg-slate-50/40 focus:bg-white text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer transition-all"
           >
             <option value="">All Severities</option>
             <option value="CRITICAL">Critical (24h SLA)</option>
@@ -444,7 +449,7 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer underline"
+              className="text-xs text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer font-medium underline underline-offset-2 transition-colors"
             >
               Reset
             </button>
@@ -462,27 +467,27 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
         </div>
 
         {/* View Mode Switcher */}
-        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 shrink-0">
+        <div className="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shrink-0">
           <button
             onClick={() => setViewMode('split')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
-              viewMode === 'split' ? 'bg-slate-950 text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'split' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Split View
           </button>
           <button
             onClick={() => setViewMode('map')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
-              viewMode === 'map' ? 'bg-slate-950 text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'map' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Map Only
           </button>
           <button
             onClick={() => setViewMode('table')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
-              viewMode === 'table' ? 'bg-slate-950 text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+              viewMode === 'table' ? 'bg-white text-slate-950 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Table Only

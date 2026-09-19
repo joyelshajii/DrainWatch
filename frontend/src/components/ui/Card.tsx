@@ -12,8 +12,8 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white border border-slate-200/90 rounded-xl shadow-2xs transition-all duration-150 ${
-        hover ? 'hover:shadow-xs hover:border-slate-300' : ''
+      className={`bg-white border border-slate-200/80 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-200 ${
+        hover ? 'hover:shadow-[0_8px_20px_-4px_rgba(15,23,42,0.08)] hover:border-slate-300/90 hover:-translate-y-0.5' : ''
       } ${className}`}
       {...props}
     >
@@ -28,7 +28,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`px-5 py-3.5 border-b border-slate-100 ${className}`} {...props}>
+    <div className={`px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -40,7 +40,7 @@ export const CardBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`p-5 ${className}`} {...props}>
+    <div className={`p-5 sm:p-6 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -52,13 +52,13 @@ export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`px-5 py-3 bg-slate-50/60 border-t border-slate-100 rounded-b-xl ${className}`} {...props}>
+    <div className={`px-5 py-3.5 bg-slate-50/70 border-t border-slate-100 rounded-b-2xl ${className}`} {...props}>
       {children}
     </div>
   );
 };
 
-// Specialized KPI Tile: Clean modern card with squircle icon badge and trend sparkline matching mockup
+// Specialized KPI Tile: Clean modern SaaS metric card with squircle icon badge and trend sparkline
 export interface KpiTileProps {
   label: string;
   value: string | number;
@@ -79,53 +79,57 @@ export const KpiTile: React.FC<KpiTileProps> = ({
   const accentStyles = {
     neutral: {
       text: 'text-slate-900',
-      iconBox: 'bg-sky-50 text-sky-600 border-sky-100',
+      iconBox: 'bg-sky-50/90 text-sky-600 border-sky-100/80',
       sparklineColor: 'text-sky-500',
       sparklinePath: 'M2 20 Q 14 24, 26 14 T 48 12 T 62 2',
+      trendBadge: 'bg-sky-50 text-sky-700 border-sky-100',
     },
     pending: {
       text: 'text-slate-900',
-      iconBox: 'bg-amber-50 text-amber-600 border-amber-100',
+      iconBox: 'bg-amber-50/90 text-amber-600 border-amber-100/80',
       sparklineColor: 'text-amber-500',
       sparklinePath: 'M2 18 Q 14 20, 26 14 T 46 8 T 62 4',
+      trendBadge: 'bg-amber-50 text-amber-700 border-amber-100',
     },
     critical: {
       text: 'text-slate-900',
-      iconBox: 'bg-rose-50 text-rose-600 border-rose-100',
+      iconBox: 'bg-rose-50/90 text-rose-600 border-rose-100/80',
       sparklineColor: 'text-rose-500',
       sparklinePath: 'M2 14 Q 12 18, 22 8 T 42 22 T 62 4',
+      trendBadge: 'bg-rose-50 text-rose-700 border-rose-100',
     },
     resolved: {
       text: 'text-slate-900',
-      iconBox: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      iconBox: 'bg-emerald-50/90 text-emerald-600 border-emerald-100/80',
       sparklineColor: 'text-emerald-500',
       sparklinePath: 'M2 18 Q 16 12, 28 20 T 48 10 T 62 2',
+      trendBadge: 'bg-emerald-50 text-emerald-700 border-emerald-100',
     },
   };
 
   const currentAccent = accentStyles[accent] || accentStyles.neutral;
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-[18px] shadow-2xs flex items-center justify-between gap-3 hover:shadow-xs transition-all duration-150">
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_-4px_rgba(15,23,42,0.08)] hover:border-slate-300/90 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-between gap-3 group">
       <div className="flex items-center gap-3.5 min-w-0">
         <div
-          className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 shadow-2xs ${currentAccent.iconBox}`}
+          className={`w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 shadow-2xs transition-transform duration-200 group-hover:scale-105 ${currentAccent.iconBox}`}
         >
           {icon}
         </div>
 
         <div className="min-w-0">
-          <span className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase block">
+          <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block font-mono">
             {label}
           </span>
-          <div className="flex items-baseline gap-1.5 mt-0.5">
+          <div className="flex items-baseline gap-2 mt-0.5">
             <span className={`text-2xl sm:text-3xl font-bold font-mono tracking-tight ${currentAccent.text}`}>
               {value}
             </span>
-            <span className="text-xs font-normal text-slate-600 truncate">{subtext}</span>
+            <span className="text-xs font-medium text-slate-500 truncate">{subtext}</span>
           </div>
           {secondaryText && (
-            <p className="text-[11px] text-slate-400 mt-0.5 font-normal truncate">
+            <p className="text-[11px] text-slate-400 mt-1 font-normal truncate">
               {secondaryText}
             </p>
           )}
@@ -133,7 +137,7 @@ export const KpiTile: React.FC<KpiTileProps> = ({
       </div>
 
       {/* Decorative Trend Sparkline Curve */}
-      <div className="hidden sm:block shrink-0 pl-2">
+      <div className="hidden sm:block shrink-0 pl-2 opacity-80 group-hover:opacity-100 transition-opacity">
         <svg
           className={`w-14 h-8 ${currentAccent.sparklineColor}`}
           viewBox="0 0 64 26"
