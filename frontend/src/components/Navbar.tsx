@@ -32,16 +32,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div className="flex items-center gap-2.5 truncate">
             <span className="inline-flex items-center gap-2 font-medium text-slate-800">
-              <span className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shrink-0">
+              <span className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/80 shrink-0">
                 <MapPin className="w-4 h-4" />
               </span>
-              <span className="font-semibold text-slate-900 text-sm sm:text-base tracking-tight">LSGD Kerala</span>
+              <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">LSGD Kerala</span>
               <span className="text-slate-300 font-normal">/</span>
-              <span className="text-slate-600 font-medium hidden sm:inline text-xs sm:text-sm">Kochi Municipal Corporation</span>
+              <span className="text-slate-600 font-medium hidden sm:inline text-sm">Kochi Municipal Corporation</span>
             </span>
             <span className="hidden lg:inline text-slate-300">|</span>
-            <span className="hidden xl:inline text-slate-500 text-xs font-mono font-medium">
-              SC-08: Canal &amp; Storm-Drain Redressal Grid
+            <span className="hidden xl:inline text-slate-500 text-xs sm:text-sm font-medium">
+              Canal &amp; Storm-Drain Redressal Grid
             </span>
           </div>
         </div>

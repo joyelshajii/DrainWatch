@@ -294,19 +294,19 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-semibold uppercase bg-slate-100 text-slate-700 border border-slate-200/90 px-2.5 py-0.5 rounded-lg font-mono">
-                Challenge SC-08
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-lg">
+              <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-3 py-1 rounded-xl">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Live Telemetry Grid
+              </span>
+              <span className="text-xs sm:text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200/80">
+                12 Municipal Wards
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">
               Kochi Canal &amp; Storm-Drain Redressal Grid
             </h1>
             <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl font-normal">
-              Live blockage telemetry and dispatch across 12 Kochi Municipal wards.
+              Live blockage telemetry, ward identification, and squad dispatch for Kochi Corporation.
             </p>
           </div>
 

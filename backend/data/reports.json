@@ -1,5 +1,60 @@
 [
   {
+    "id": "KL-KCH-W48-2026-0108",
+    "created_at": "2026-09-19T21:50:52.754971Z",
+    "updated_at": "2026-09-19T21:50:52.899982Z",
+    "latitude": 9.9674,
+    "longitude": 76.2995,
+    "address": "Kadavanthra Junction",
+    "landmark": "Near Metro Pillar 840",
+    "ward_id": "W48",
+    "ward_number": 48,
+    "ward_name": "Kadavanthra",
+    "zone": "Central Zone (Division IV)",
+    "local_body": "Kochi Municipal Corporation",
+    "canal_basin": "Thevara-Perandoor Canal Network",
+    "authority_name": "Er. Rajesh K. Nair (AE, LSGD Engineering Wing)",
+    "overseer": "Shri. Suresh Babu (First Grade Overseer)",
+    "health_inspector": "Shri. Manoj V. (Junior Health Inspector, Circle 5)",
+    "blockage_type": "PLASTIC_SOLID_WASTE",
+    "severity": "HIGH",
+    "description": "Plastic bags blocking storm grate",
+    "photo_url": "https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=800&q=80",
+    "reporter_name": "Kochi Resident",
+    "reporter_phone": "9847012345",
+    "status": "ESCALATED_L1",
+    "sla_deadline": "2026-09-21T21:50:52.754971Z",
+    "sla_duration_hours": 48,
+    "escalation_level": 1,
+    "timeline": [
+      {
+        "timestamp": "2026-09-19T21:50:52.754971Z",
+        "status": "REPORTED",
+        "actor": "Kochi Resident",
+        "actor_role": "Citizen Reporter",
+        "description": "Grievance registered. Geotagged to Ward 48 (Kadavanthra) under Er. Rajesh K. Nair (AE, LSGD Engineering Wing). SLA deadline: 48 hours."
+      },
+      {
+        "timestamp": "2026-09-19T21:50:52.899982Z",
+        "status": "IN_PROGRESS",
+        "actor": "Er. Rajesh K. Nair",
+        "actor_role": "Assistant Engineer, LSGD Division IV",
+        "description": "Dispatched desilting excavator squad to site."
+      },
+      {
+        "timestamp": "2026-09-19T21:50:52.974441Z",
+        "status": "ESCALATED_L1",
+        "actor": "Citizen Appellant",
+        "actor_role": "Public Grievance Appeal",
+        "description": "Citizen appeal filed. Escalated to Level 1: Water level rising toward adjacent households."
+      }
+    ],
+    "assigned_crew": "LSGD Quick Response Gang 3",
+    "official_remarks": "Dispatched desilting excavator squad to site.",
+    "escalated_at": "2026-09-19T21:50:52.974441Z",
+    "escalation_reason": "Water level rising toward adjacent households."
+  },
+  {
     "id": "KL-KCH-W48-2026-0107",
     "created_at": "2026-09-19T21:01:39.881940Z",
     "updated_at": "2026-09-19T21:01:39.881940Z",
