@@ -426,7 +426,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Header: Clear hierarchy, brief copy */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
         <div>

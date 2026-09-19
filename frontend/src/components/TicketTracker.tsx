@@ -137,7 +137,7 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
   const slaProgress = report ? getSLAProgress(report) : null;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Header: Page scale */}
       <div className="border-b border-slate-200/80 pb-4">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 font-sans">

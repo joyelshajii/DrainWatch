@@ -124,7 +124,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
   const resolvedCount = reports.filter((r) => r.status === 'RESOLVED').length;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Institutional Officer Header */}
       <div className="border-b border-slate-200/80 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

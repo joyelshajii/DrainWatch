@@ -61,29 +61,31 @@ export function App() {
         <Navbar onToggleSidebar={() => setSidebarOpen(true)} />
 
         {/* Page Content */}
-        <main className="flex-1 px-5 sm:px-7 py-6 overflow-y-auto">
-          {currentTab === 'map' && (
-            <WardMap
-              onSelectTicket={handleSelectTicketFromMap}
-              onNavigateToReport={() => handleSelectTab('report')}
-            />
-          )}
+        <main className="flex-1 px-5 sm:px-8 py-7 overflow-y-auto">
+          <div className="max-w-7xl mx-auto">
+            {currentTab === 'map' && (
+              <WardMap
+                onSelectTicket={handleSelectTicketFromMap}
+                onNavigateToReport={() => handleSelectTab('report')}
+              />
+            )}
 
-          {currentTab === 'report' && (
-            <ReportForm onReportSubmitted={handleReportSubmitted} />
-          )}
+            {currentTab === 'report' && (
+              <ReportForm onReportSubmitted={handleReportSubmitted} />
+            )}
 
-          {currentTab === 'track' && (
-            <TicketTracker initialTicketId={selectedTicketId} />
-          )}
+            {currentTab === 'track' && (
+              <TicketTracker initialTicketId={selectedTicketId} />
+            )}
 
-          {currentTab === 'official' && (
-            <OfficerPortal onSelectTicket={handleSelectTicketFromMap} />
-          )}
+            {currentTab === 'official' && (
+              <OfficerPortal onSelectTicket={handleSelectTicketFromMap} />
+            )}
 
-          {currentTab === 'leaderboard' && (
-            <Leaderboard />
-          )}
+            {currentTab === 'leaderboard' && (
+              <Leaderboard />
+            )}
+          </div>
         </main>
       </div>
     </div>
