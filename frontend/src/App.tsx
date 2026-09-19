@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { WardMap } from './components/WardMap';
@@ -12,6 +12,7 @@ export function App() {
   const [currentTab, setCurrentTab] = useState<'map' | 'report' | 'track' | 'official' | 'leaderboard'>('map');
   const [selectedTicketId, setSelectedTicketId] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainContentRef = useRef<HTMLElement>(null);
 
   // Read URL query parameters on initial mount
   useEffect(() => {
@@ -27,27 +28,34 @@ export function App() {
     }
   }, []);
 
+  const scrollToTop = () => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleSelectTab = (tab: string) => {
     setCurrentTab(tab as any);
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   const handleSelectTicketFromMap = (id: string) => {
     setSelectedTicketId(id);
     setCurrentTab('track');
     window.history.replaceState(null, '', `?ticket=${encodeURIComponent(id)}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   const handleReportSubmitted = (report: Report) => {
     setSelectedTicketId(report.id);
     setCurrentTab('track');
+    scrollToTop();
   };
 
   return (
-    <div className="min-h-screen flex flex-row bg-slate-50 text-slate-900 font-sans antialiased">
-      {/* Left Sidebar */}
+    <div className="h-screen w-screen overflow-hidden flex bg-slate-50 text-slate-900 font-sans antialiased">
+      {/* Left Sidebar - permanently fixed on lg+, drawer on mobile */}
       <Sidebar
         currentTab={currentTab}
         onSelectTab={handleSelectTab}
@@ -55,13 +63,17 @@ export function App() {
         onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Right: Top Header + Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0">
-        {/* Top Operational Header */}
+      {/* Right Column: Top Header + Main Content Area */}
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+        {/* Top Header - pinned at top */}
         <Navbar onToggleSidebar={() => setSidebarOpen(true)} />
 
-        {/* Page Content */}
-        <main className="flex-1 px-5 sm:px-8 py-7 overflow-y-auto">
+        {/* Scrollable Main Content Area */}
+        <main
+          ref={mainContentRef}
+          className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-8 py-6 sm:py-7 focus:outline-none"
+          tabIndex={-1}
+        >
           <div className="max-w-7xl mx-auto">
             {currentTab === 'map' && (
               <WardMap

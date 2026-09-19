@@ -1,5 +1,51 @@
 [
   {
+    "id": "KL-KCH-W60-2026-0110",
+    "created_at": "2026-09-19T22:39:00.023614Z",
+    "updated_at": "2026-09-19T22:39:00.023614Z",
+    "latitude": 9.965,
+    "longitude": 76.242,
+    "address": "Kochi Canal Stretch",
+    "landmark": "",
+    "ward_id": "W60",
+    "ward_number": 60,
+    "ward_name": "Fort Kochi",
+    "zone": "West Zone (Division II)",
+    "local_body": "Kochi Municipal Corporation",
+    "canal_basin": "Calvathy & Rameswaram Canal Outlet",
+    "authority_name": "Er. Mini Thomas (AE, West Kochi Division)",
+    "overseer": "Shri. Sebastian P. (Overseer)",
+    "health_inspector": "Shri. Xavier M. (JHI, Circle 2)",
+    "blockage_type": "PLASTIC_SOLID_WASTE",
+    "severity": "HIGH",
+    "description": "Severe blockage in canal with plastic debris and silt",
+    "photo_url": "",
+    "reporter_name": "Deepa Menon",
+    "reporter_phone": "+91 98471 22334",
+    "status": "ESCALATED_L1",
+    "sla_deadline": "2026-09-21T22:39:00.023614Z",
+    "sla_duration_hours": 48,
+    "escalation_level": 1,
+    "timeline": [
+      {
+        "timestamp": "2026-09-19T22:39:00.023614Z",
+        "status": "REPORTED",
+        "actor": "Deepa Menon",
+        "actor_role": "Citizen Reporter",
+        "description": "Grievance registered. Geotagged to Ward 60 (Fort Kochi) under Er. Mini Thomas (AE, West Kochi Division). SLA deadline: 48 hours."
+      },
+      {
+        "timestamp": "2026-09-19T22:39:04.124725Z",
+        "status": "ESCALATED_L1",
+        "actor": "Citizen Appellant",
+        "actor_role": "Public Grievance Escalation",
+        "description": "Citizen appeal filed. Escalated to Level 1: Citizen Escalation Appeal: Flood backflow hazard imminent."
+      }
+    ],
+    "escalated_at": "2026-09-19T22:39:04.124725Z",
+    "escalation_reason": "Citizen Escalation Appeal: Flood backflow hazard imminent."
+  },
+  {
     "id": "KL-KCH-W48-2026-0109",
     "created_at": "2026-09-19T22:05:30.003277Z",
     "updated_at": "2026-09-19T22:05:30.003277Z",

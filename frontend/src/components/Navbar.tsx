@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md text-slate-700 text-sm border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+    <header className="sticky top-0 shrink-0 w-full z-40 bg-white/90 backdrop-blur-md text-slate-700 text-sm border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
       <div className="w-full px-5 sm:px-8 py-3.5 flex items-center justify-between gap-4">
         {/* Left Section: Mobile Menu + LSGD Municipal Tag */}
         <div className="flex items-center gap-3 min-w-0">
