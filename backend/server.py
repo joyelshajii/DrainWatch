@@ -14,35 +14,53 @@ import numpy as np
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_USE_LEGACY_KERAS'] = '1'
 
-# Try loading TensorFlow / Keras model
+# Try loading TensorFlow Lite model first (lightweight, ~2MB, zero memory crash on Render)
+# Fallback to Keras H5 model, or heuristic fallback if neither is available.
 AI_MODEL_AVAILABLE = False
+tflite_interpreter = None
+tflite_input_details = None
+tflite_output_details = None
 model = None
 
 try:
-    try:
-        import tf_keras as keras_loader
-        from tf_keras.models import load_model
-        from tf_keras.layers import DepthwiseConv2D
-    except ImportError:
-        from tensorflow.keras.models import load_model
-        from tensorflow.keras.layers import DepthwiseConv2D
-
-    class CustomDepthwiseConv2D(DepthwiseConv2D):
-        def __init__(self, **kwargs):
-            kwargs.pop('groups', None)
-            super().__init__(**kwargs)
-
-    model_path = os.path.join(os.path.dirname(__file__), 'model.h5')
-    if os.path.exists(model_path):
-        model = load_model(
-            model_path,
-            compile=False,
-            custom_objects={'DepthwiseConv2D': CustomDepthwiseConv2D}
-        )
+    tflite_path = os.path.join(os.path.dirname(__file__), 'model.tflite')
+    if os.path.exists(tflite_path):
+        import tensorflow as tf
+        tflite_interpreter = tf.lite.Interpreter(model_path=tflite_path)
+        tflite_interpreter.allocate_tensors()
+        tflite_input_details = tflite_interpreter.get_input_details()
+        tflite_output_details = tflite_interpreter.get_output_details()
         AI_MODEL_AVAILABLE = True
-        print("[AI ENGINE] Successfully loaded CNN model from model.h5")
+        print("[AI ENGINE] Successfully loaded TFLite model from model.tflite")
 except Exception as e:
-    print(f"[AI ENGINE] Warning: Could not initialize TensorFlow model ({e}). Using heuristic fallback.")
+    print(f"[AI ENGINE] TFLite load skipped or failed: {e}")
+
+if not AI_MODEL_AVAILABLE:
+    try:
+        try:
+            import tf_keras as keras_loader
+            from tf_keras.models import load_model
+            from tf_keras.layers import DepthwiseConv2D
+        except ImportError:
+            from tensorflow.keras.models import load_model
+            from tensorflow.keras.layers import DepthwiseConv2D
+
+        class CustomDepthwiseConv2D(DepthwiseConv2D):
+            def __init__(self, **kwargs):
+                kwargs.pop('groups', None)
+                super().__init__(**kwargs)
+
+        model_path = os.path.join(os.path.dirname(__file__), 'model.h5')
+        if os.path.exists(model_path):
+            model = load_model(
+                model_path,
+                compile=False,
+                custom_objects={'DepthwiseConv2D': CustomDepthwiseConv2D}
+            )
+            AI_MODEL_AVAILABLE = True
+            print("[AI ENGINE] Successfully loaded CNN model from model.h5")
+    except Exception as e:
+        print(f"[AI ENGINE] Warning: Could not initialize TensorFlow model ({e}). Using heuristic fallback.")
 
 app = Flask(__name__)
 CORS(app, origins=[
@@ -727,19 +745,28 @@ def analyze_image():
             img_array = np.array(img, dtype=np.float32) / 255.0
             img_array = np.expand_dims(img_array, axis=0)
 
-            preds = model.predict(img_array)
-            pred_idx = int(np.argmax(preds, axis=1)[0])
-            confidence = float(np.max(preds))
-
-            # Trained CNN labels: index 0: Clean / Clear Water, index 1: Polluted / Choked Drain
-            if pred_idx == 0:
-                category = "Clean Water / Unobstructed"
-                suggested_severity = "MINOR"
-                detected_blockage = "SILT_ACCUMULATION"
+            if tflite_interpreter is not None:
+                tflite_interpreter.set_tensor(tflite_input_details[0]['index'], img_array)
+                tflite_interpreter.invoke()
+                preds = tflite_interpreter.get_tensor(tflite_output_details[0]['index'])
+            elif model is not None:
+                preds = model.predict(img_array)
             else:
-                category = "Polluted / Choked Canal"
-                suggested_severity = "HIGH" if confidence > 0.8 else "MODERATE"
-                detected_blockage = "PLASTIC_SOLID_WASTE"
+                preds = None
+
+            if preds is not None:
+                pred_idx = int(np.argmax(preds, axis=1)[0])
+                confidence = float(np.max(preds))
+
+                # Trained CNN labels: index 0: Clean / Clear Water, index 1: Polluted / Choked Drain
+                if pred_idx == 0:
+                    category = "Clean Water / Unobstructed"
+                    suggested_severity = "MINOR"
+                    detected_blockage = "SILT_ACCUMULATION"
+                else:
+                    category = "Polluted / Choked Canal"
+                    suggested_severity = "HIGH" if confidence > 0.8 else "MODERATE"
+                    detected_blockage = "PLASTIC_SOLID_WASTE"
         except Exception as e:
             print(f"[AI MODEL ERROR] {e}")
 
