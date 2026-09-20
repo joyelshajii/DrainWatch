@@ -45,7 +45,13 @@ except Exception as e:
     print(f"[AI ENGINE] Warning: Could not initialize TensorFlow model ({e}). Using heuristic fallback.")
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=[
+    "https://drain-watch-final.vercel.app",
+    "http://localhost:8088",
+    "http://localhost:5173",
+    "http://127.0.0.1:8088",
+    "http://127.0.0.1:5173",
+], supports_credentials=True)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 UPLOADS_DIR = os.path.join(DATA_DIR, 'uploads')

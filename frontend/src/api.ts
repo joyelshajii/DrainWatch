@@ -1,9 +1,10 @@
 import type { GeoJSONFeatureCollection, Report, Stats, Ward, UserLeaderboardItem, AIAnalysisResult } from './types';
 
-// In development or when running directly on localhost:8088 / 5173, use relative '/api'
-// When deployed on Vercel, use VITE_API_URL pointing to Render
+// On localhost/127.0.0.1 → use local Python server directly (no Render cold-start delay)
+// On Vercel → use VITE_API_URL env var, or fallback to hardcoded Render URL
 const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-const API_URL = isLocalhost ? '' : (import.meta.env.VITE_API_URL || '');
+const RENDER_URL = 'https://drainwatch-final.onrender.com';
+const API_URL = isLocalhost ? '' : (import.meta.env.VITE_API_URL || RENDER_URL);
 const API_BASE = API_URL ? `${API_URL.replace(/\/+$/, '')}/api` : '/api';
 
 export async function fetchWards(): Promise<GeoJSONFeatureCollection> {
