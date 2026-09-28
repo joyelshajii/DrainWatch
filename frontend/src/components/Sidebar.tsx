@@ -122,21 +122,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Bottom Civic Banner */}
-        <div className="p-4 border-t border-slate-100">
-          <div className="rounded-xl p-3.5 bg-gradient-to-br from-emerald-50/90 to-teal-50/50 border border-emerald-100/90 flex items-center gap-3 relative overflow-hidden">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <Leaf className="w-5 h-5" />
+        {/* Bottom Civic & Emergency Banner */}
+        <div className="p-4 border-t border-slate-100 space-y-3">
+          <div className="rounded-xl p-3 bg-gradient-to-br from-emerald-50/90 to-teal-50/50 border border-emerald-100/90 flex items-center gap-3 relative overflow-hidden">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <Leaf className="w-4 h-4" />
             </div>
             <div>
-              <strong className="text-sm font-semibold text-emerald-950 block leading-tight">
+              <strong className="text-xs font-semibold text-emerald-950 block leading-tight">
                 Cleaner Kochi
               </strong>
-              <span className="text-xs text-emerald-700 font-medium">
-                Greener Tomorrow
+              <span className="text-[11px] text-emerald-700 font-medium">
+                Storm-Drain Redressal Grid
               </span>
             </div>
           </div>
+
+          <a
+            href="tel:18004254000"
+            className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 text-xs font-medium transition-colors"
+          >
+            <span>Monsoon 24x7:</span>
+            <span className="font-mono font-bold text-slate-900">1800-425-4000</span>
+          </a>
         </div>
       </aside>
     </>
