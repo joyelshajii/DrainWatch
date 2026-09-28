@@ -933,18 +933,58 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
                   )}
 
                   {aiResult && !analyzingAI && (
-                    <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-1.5 text-xs">
-                      <div className="flex items-center justify-between font-semibold text-slate-900">
-                        <span className="flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-                          <span>AI Classification: {aiResult.category}</span>
+                    <div className="bg-slate-50 border border-slate-200/90 p-4 rounded-xl space-y-3 text-xs shadow-2xs">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/70 pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="p-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <Sparkles className="w-3.5 h-3.5" />
+                          </span>
+                          <div>
+                            <span className="text-[10px] font-mono text-slate-500 block uppercase tracking-wider">
+                              AI Vision Classification
+                            </span>
+                            <span className="font-semibold text-slate-900 text-xs">
+                              {aiResult.category}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2 py-0.5 rounded text-[11px] font-mono font-semibold">
+                            {aiResult.confidence_percentage}% Confidence
+                          </span>
+                          <span className="bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded text-[11px] font-semibold">
+                            +{aiResult.civic_points_awarded || 10} Civic Pts
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Confidence Meter Bar */}
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between text-[11px] text-slate-600 font-mono">
+                          <span>Model Confidence Index</span>
+                          <span className="font-semibold text-slate-900">{aiResult.confidence_percentage}%</span>
+                        </div>
+                        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                          <div
+                            className="bg-emerald-600 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${Math.min(100, Math.max(10, aiResult.confidence_percentage))}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                        <div className="text-[11px] text-slate-500 font-medium">Auto-Mapped Values:</div>
+                        <span className="bg-white border border-slate-200 px-2 py-0.5 rounded text-[11px] text-slate-700 font-mono">
+                          Severity: <strong className="text-slate-900">{aiResult.suggested_severity}</strong>
                         </span>
-                        <span className="bg-white px-2 py-0.5 rounded text-[11px] font-mono border border-slate-200 text-slate-700">
-                          {aiResult.confidence_percentage}% Confidence
+                        <span className="bg-white border border-slate-200 px-2 py-0.5 rounded text-[11px] text-slate-700 font-mono">
+                          Type: <strong className="text-slate-900">{aiResult.suggested_blockage_type.replace(/_/g, ' ')}</strong>
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 leading-snug">
-                        {aiResult.ai_remarks} Suggested Priority: <strong className="text-slate-900">{aiResult.suggested_severity}</strong>.
+
+                      <p className="text-xs text-slate-600 leading-snug bg-white/70 p-2.5 rounded-lg border border-slate-200/70">
+                        {aiResult.ai_remarks}
                       </p>
                     </div>
                   )}
