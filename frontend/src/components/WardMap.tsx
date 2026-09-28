@@ -16,6 +16,7 @@ import {
   MapPin,
   FolderOpen,
   MoreVertical,
+  Download,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Badge, HazardTag } from './ui/Badge';
@@ -285,6 +286,30 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
     setSelectedStatus('');
     setSelectedSeverity('');
     setSearchQuery('');
+  };
+
+  const handleExportCSV = () => {
+    if (reports.length === 0) return;
+    const headers = ['Ticket ID', 'Ward', 'Canal Basin', 'Obstruction', 'Severity', 'Status', 'SLA Deadline', 'Dispatched Squad'];
+    const rows = reports.map((r) => [
+      r.id,
+      `Ward ${r.ward_number} - ${r.ward_name}`,
+      r.canal_basin,
+      r.blockage_type,
+      r.severity,
+      r.status,
+      r.sla_deadline,
+      r.assigned_crew || 'Unassigned',
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `kochi_drainwatch_grievances_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -557,9 +582,20 @@ export const WardMap: React.FC<WardMapProps> = ({ onSelectTicket, onNavigateToRe
               </span>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <span className="text-xs text-slate-400 font-sans">
-              Live updates active
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-400 font-sans hidden sm:inline">
+                Live updates active
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleExportCSV}
+                icon={<Download className="w-3.5 h-3.5 text-slate-500" />}
+                className="text-xs py-1 px-3 min-h-[34px] rounded-lg"
+              >
+                Export CSV
+              </Button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
