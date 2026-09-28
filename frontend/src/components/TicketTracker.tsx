@@ -32,6 +32,20 @@ const SAMPLE_TICKETS = [
   { id: 'KL-KCH-W60-2026-0104', label: 'W60 Fort Kochi', status: 'REPORTED' },
 ];
 
+const REDRESSAL_STAGES = [
+  { id: 'REPORTED', title: '1. Lodged & AI Geotagged', desc: 'Auto-routed to ward AE' },
+  { id: 'INSPECTED', title: '2. Field Inspected', desc: 'Overseer on-site audit' },
+  { id: 'IN_PROGRESS', title: '3. Squad Dispatched', desc: 'De-silting & unchoking' },
+  { id: 'RESOLVED', title: '4. Flow Restored', desc: 'Verified with photo proof' },
+];
+
+const getActiveStageIndex = (status: string) => {
+  if (status === 'RESOLVED') return 3;
+  if (status === 'IN_PROGRESS' || status.startsWith('ESCALATED')) return 2;
+  if (status === 'INSPECTED') return 1;
+  return 0;
+};
+
 export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId }) => {
   const [ticketIdInput, setTicketIdInput] = useState(initialTicketId || 'KL-KCH-W66-2026-0102');
   const [report, setReport] = useState<Report | null>(null);
@@ -274,6 +288,52 @@ export const TicketTracker: React.FC<TicketTrackerProps> = ({ initialTicketId })
                     Escalate Grievance
                   </Button>
                 )}
+              </div>
+            </div>
+
+            {/* Visual 4-Stage Redressal Stepper */}
+            <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-4">
+              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-2.5">
+                Municipal Redressal Lifecycle
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                {REDRESSAL_STAGES.map((stage, idx) => {
+                  const activeIdx = getActiveStageIndex(report.status);
+                  const isDone = idx < activeIdx || report.status === 'RESOLVED';
+                  const isCurrent = idx === activeIdx && report.status !== 'RESOLVED';
+                  return (
+                    <div
+                      key={stage.id}
+                      className={`p-3 rounded-lg border transition-all ${
+                        isCurrent
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                          : isDone
+                          ? 'bg-white border-slate-200 text-slate-800'
+                          : 'bg-white/50 border-slate-200/60 text-slate-400'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span
+                          className={`w-4 h-4 rounded-full flex items-center justify-center font-mono text-[10px] ${
+                            isCurrent
+                              ? 'bg-emerald-400 text-slate-950 font-bold'
+                              : isDone
+                              ? 'bg-emerald-100 text-emerald-800 font-bold'
+                              : 'bg-slate-100 text-slate-400'
+                          }`}
+                        >
+                          {isDone ? '✓' : idx + 1}
+                        </span>
+                        <span className={`text-xs font-semibold truncate ${isCurrent ? 'text-white' : ''}`}>
+                          {stage.title}
+                        </span>
+                      </div>
+                      <p className={`text-[11px] leading-tight ${isCurrent ? 'text-slate-300' : 'text-slate-500'}`}>
+                        {stage.desc}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
