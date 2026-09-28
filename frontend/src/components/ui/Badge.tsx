@@ -98,7 +98,7 @@ export const HazardTag: React.FC<HazardTagProps> = ({ severity }) => {
       }`}
     >
       <span
-        className={`w-1.5 h-1.5 rounded-xs mr-1.5 shrink-0 ${
+        className={`w-2 h-2 rounded-full mr-1.5 shrink-0 ${
           isCritical
             ? 'bg-rose-600'
             : isHigh
