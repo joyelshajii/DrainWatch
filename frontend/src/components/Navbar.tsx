@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Menu,
   MapPin,
   Bell,
   ChevronDown,
+  CloudRain,
+  Phone,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -19,10 +21,23 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <header className="sticky top-0 shrink-0 w-full z-40 bg-white/90 backdrop-blur-md text-slate-700 text-sm border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-      <div className="w-full px-5 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+    <header className="sticky top-0 shrink-0 w-full z-40 bg-white/95 backdrop-blur-md text-slate-700 text-sm border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+      <div ref={navRef} className="w-full px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
         {/* Left Section: Mobile Menu + LSGD Municipal Tag */}
         <div className="flex items-center gap-3 min-w-0">
           <button
@@ -49,20 +64,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Right Section: Engine Status, Hotline, Notifications, Profile */}
+        {/* Right Section: Weather advisory, Hotline, Notifications, Profile */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-xs sm:text-sm">
-          {/* GIS PIP Engine Status */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 font-medium text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>GIS PIP Engine: <strong className="font-bold text-emerald-900">Active</strong></span>
+          {/* Live Monsoon Weather Advisory */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs font-medium">
+            <CloudRain className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <span>Monsoon Cell: <strong className="font-semibold text-amber-950">Yellow Alert</strong></span>
           </div>
 
-          {/* Hotline */}
-          <div className="hidden md:flex items-center gap-1.5 text-slate-500 text-xs sm:text-sm">
-            <span>Control Room:</span>
+          {/* Hotline Direct */}
+          <div className="hidden sm:flex items-center gap-1.5 text-slate-500 text-xs">
+            <Phone className="w-3.5 h-3.5 text-slate-400" />
             <a
               href="tel:18004254000"
               className="text-slate-900 hover:text-sky-600 font-semibold font-mono underline decoration-slate-300 underline-offset-2 transition-colors"
+              title="24x7 Municipal Control Room"
             >
               1800-425-4000
             </a>
@@ -79,8 +95,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowProfileMenu(false);
                 onNotificationsClick?.();
               }}
-              className="relative p-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-              title="Civic Alerts"
+              className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+              title="Civic Alerts & SLA Breaches"
             >
               <Bell className="w-4 h-4" />
               <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
@@ -90,23 +106,34 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-lg p-3 z-50 animate-in fade-in duration-150">
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-3 z-50 animate-fade-in">
                 <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-100 mb-2">
                   <span className="font-bold text-slate-900 text-xs sm:text-sm">Civic Escalations</span>
-                  <span className="text-[11px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">3 Breached SLA</span>
+                  <span className="text-[11px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                    3 Breached SLA
+                  </span>
                 </div>
-                <div className="space-y-1 text-xs">
-                  <div className="p-2 rounded-xl hover:bg-slate-50 transition-colors">
-                    <p className="font-semibold text-slate-900">Ward 48 &bull; Thevara-Perandoor</p>
-                    <p className="text-slate-500 text-[11px]">Culvert choke at SCB Road &bull; 48h SLA elapsed</p>
+                <div className="space-y-1.5 text-xs">
+                  <div className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                    <p className="font-semibold text-slate-900 flex items-center justify-between">
+                      <span>Ward 48 &bull; Thevara-Perandoor</span>
+                      <span className="text-rose-600 font-mono text-[10px] font-bold">L4 ESCALATED</span>
+                    </p>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Culvert choke at SCB Road &bull; Overdue</p>
                   </div>
-                  <div className="p-2 rounded-xl hover:bg-slate-50 transition-colors">
-                    <p className="font-semibold text-slate-900">Ward 66 &bull; Mullassery Canal</p>
-                    <p className="text-slate-500 text-[11px]">Severe plastic blockage near South Rly Stn</p>
+                  <div className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                    <p className="font-semibold text-slate-900 flex items-center justify-between">
+                      <span>Ward 66 &bull; Mullassery Canal</span>
+                      <span className="text-rose-600 font-mono text-[10px] font-bold">L4 ESCALATED</span>
+                    </p>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Plastic blockage near South Railway Station</p>
                   </div>
-                  <div className="p-2 rounded-xl hover:bg-slate-50 transition-colors">
-                    <p className="font-semibold text-slate-900">Ward 60 &bull; Calvathy Canal</p>
-                    <p className="text-slate-500 text-[11px]">Silt barrier throttled outflow to harbor</p>
+                  <div className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                    <p className="font-semibold text-slate-900 flex items-center justify-between">
+                      <span>Ward 60 &bull; Calvathy Canal</span>
+                      <span className="text-rose-600 font-mono text-[10px] font-bold">L4 ESCALATED</span>
+                    </p>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Heavy silt barrier throttled outflow</p>
                   </div>
                 </div>
               </div>
@@ -122,23 +149,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowNotifications(false);
                 onProfileClick?.();
               }}
-              className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full bg-slate-100/80 hover:bg-slate-200/80 border border-slate-200/90 text-slate-800 text-xs sm:text-sm transition-all cursor-pointer"
+              className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-800 text-xs transition-all cursor-pointer"
             >
-              <div className="w-7 h-7 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center font-sans shadow-xs">
-                KM
+              <div className="w-6 h-6 rounded-full bg-slate-900 text-white font-bold text-[11px] flex items-center justify-center font-sans shadow-xs">
+                KC
               </div>
-              <span className="hidden sm:inline font-sans text-xs sm:text-sm text-slate-800 font-semibold">Control Cell</span>
+              <span className="hidden sm:inline font-sans text-xs text-slate-800 font-semibold">Control Cell</span>
               <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
             </button>
 
             {/* Profile Dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-slate-200 shadow-lg p-3 z-50 animate-in fade-in duration-150">
-                <div className="px-2 py-1.5 border-b border-slate-100 mb-2">
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-slate-200 shadow-xl p-3.5 z-50 animate-fade-in space-y-2">
+                <div className="px-1 border-b border-slate-100 pb-2">
                   <p className="font-bold text-slate-900 text-xs sm:text-sm">Kochi Corporation Control Cell</p>
                   <p className="text-slate-500 text-[11px]">LSGD Engineering &amp; Disaster Wing</p>
                 </div>
-                <div className="space-y-1 text-xs">
+                <div className="space-y-1.5 text-xs">
                   <div className="p-2 rounded-xl bg-slate-50">
                     <span className="text-slate-400 block text-[10px] font-mono uppercase">Jurisdiction</span>
                     <span className="font-semibold text-slate-800">12 Wards &bull; Division IV</span>
@@ -156,4 +183,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
-
