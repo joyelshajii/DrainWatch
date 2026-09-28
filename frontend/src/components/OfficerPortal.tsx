@@ -159,6 +159,41 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
         </div>
       )}
 
+      {/* Triage Overview Metric Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs">
+          <span className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block">Active Triage Queue</span>
+          <div className="text-2xl font-bold text-slate-900 font-mono mt-1">
+            {reports.filter((r) => r.status !== 'RESOLVED').length}
+          </div>
+          <span className="text-[11px] text-slate-500 mt-0.5 block">Pending field clearance</span>
+        </div>
+
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs">
+          <span className="text-[11px] font-mono text-amber-700 uppercase tracking-wider block">Critical / High Risk</span>
+          <div className="text-2xl font-bold text-amber-800 font-mono mt-1">
+            {reports.filter((r) => (r.severity === 'CRITICAL' || r.severity === 'HIGH') && r.status !== 'RESOLVED').length}
+          </div>
+          <span className="text-[11px] text-amber-700/80 mt-0.5 block">Flood hazard priority</span>
+        </div>
+
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs">
+          <span className="text-[11px] font-mono text-rose-700 uppercase tracking-wider block">SLA Overdue</span>
+          <div className="text-2xl font-bold text-rose-800 font-mono mt-1">
+            {overdueCount}
+          </div>
+          <span className="text-[11px] text-rose-700/80 mt-0.5 block">Immediate escalation</span>
+        </div>
+
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs">
+          <span className="text-[11px] font-mono text-emerald-700 uppercase tracking-wider block">Flow Restored</span>
+          <div className="text-2xl font-bold text-emerald-800 font-mono mt-1">
+            {resolvedCount}
+          </div>
+          <span className="text-[11px] text-emerald-700/80 mt-0.5 block">Audited &amp; completed</span>
+        </div>
+      </div>
+
       {/* Triage Queue Controls & Search Toolbar */}
       <Card className="p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -401,12 +436,32 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                 <option value="RESOLVED">RESOLVED - Canal de-silted &amp; water velocity restored</option>
               </Select>
 
-              <Input
-                label="Assign Maintenance Squad / De-silting Gang:"
-                value={assignedCrew}
-                onChange={(e) => setAssignedCrew(e.target.value)}
-                placeholder="e.g. LSGD Central Desilting Gang 4 (Supervisor: P. Sivan)"
-              />
+              <div className="space-y-1.5">
+                <Input
+                  label="Assign Maintenance Squad / De-silting Gang:"
+                  value={assignedCrew}
+                  onChange={(e) => setAssignedCrew(e.target.value)}
+                  placeholder="e.g. LSGD Central Desilting Gang 4 (Supervisor: P. Sivan)"
+                />
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="text-[11px] text-slate-500 font-medium">Quick Presets:</span>
+                  {[
+                    'LSGD Quick Response Gang 3',
+                    'KMC Siphon Jetting Unit',
+                    'Central Excavator Gang',
+                    'Ward Sanitation Squad',
+                  ].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setAssignedCrew(preset)}
+                      className="text-[11px] px-2 py-0.5 rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors font-medium cursor-pointer"
+                    >
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
@@ -439,10 +494,26 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                     />
                   </label>
                   {resolutionPhotoUrl ? (
-                    <span className="text-emerald-700 text-xs font-medium flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Resolution proof attached</span>
-                    </span>
+                    <div className="flex items-center gap-2.5">
+                      <div className="relative rounded overflow-hidden border border-emerald-300 w-12 h-10">
+                        <img
+                          src={resolutionPhotoUrl}
+                          alt="Proof preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="text-emerald-700 text-xs font-medium flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Flow restoration proof attached</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setResolutionPhotoUrl('')}
+                        className="text-slate-400 hover:text-rose-600 text-xs underline cursor-pointer ml-1"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ) : (
                     <span className="text-slate-400 text-xs">Optional or attach upon resolution</span>
                   )}
@@ -455,7 +526,7 @@ export const OfficerPortal: React.FC<OfficerPortalProps> = ({ onSelectTicket }) 
                         'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
                       )
                     }
-                    className="text-xs text-slate-600 hover:text-slate-900 underline cursor-pointer"
+                    className="text-xs text-slate-600 hover:text-slate-900 underline cursor-pointer block"
                   >
                     Load Sample Cleared Drain Photo (Reviewer demo)
                   </button>
