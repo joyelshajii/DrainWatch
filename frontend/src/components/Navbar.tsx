@@ -21,7 +21,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'ml'>(() => {
+    return (localStorage.getItem('drainwatch_lang') as 'en' | 'ml') || 'en';
+  });
   const navRef = useRef<HTMLDivElement>(null);
+
+  const handleLanguageChange = (lang: 'en' | 'ml') => {
+    setLanguage(lang);
+    localStorage.setItem('drainwatch_lang', lang);
+  };
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -53,23 +61,62 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/80 shrink-0">
                 <MapPin className="w-4 h-4" />
               </span>
-              <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">LSGD Kerala</span>
+              <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">
+                {language === 'ml' ? 'തദ്ദേശ സ്വയംഭരണ വകുപ്പ്' : 'LSGD Kerala'}
+              </span>
               <span className="text-slate-300 font-normal">/</span>
-              <span className="text-slate-600 font-medium hidden sm:inline text-sm">Kochi Municipal Corporation</span>
+              <span className="text-slate-600 font-medium hidden sm:inline text-sm">
+                {language === 'ml' ? 'കൊച്ചി കോർപ്പറേഷൻ' : 'Kochi Municipal Corporation'}
+              </span>
             </span>
             <span className="hidden lg:inline text-slate-300">|</span>
             <span className="hidden xl:inline text-slate-500 text-xs sm:text-sm font-medium">
-              Canal &amp; Storm-Drain Redressal Grid
+              {language === 'ml'
+                ? 'തോട് & ഓവുചാൽ പരാതി പരിഹാര സെൽ'
+                : 'Canal & Storm-Drain Redressal Grid'}
             </span>
           </div>
         </div>
 
-        {/* Right Section: Weather advisory, Hotline, Notifications, Profile */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-xs sm:text-sm">
+        {/* Right Section: Language switcher, Weather advisory, Hotline, Notifications, Profile */}
+        <div className="flex items-center gap-2.5 sm:gap-4 shrink-0 text-xs sm:text-sm">
+          {/* Bilingual Language Switcher */}
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200 text-xs">
+            <button
+              type="button"
+              onClick={() => handleLanguageChange('en')}
+              className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
+                language === 'en'
+                  ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="Switch to English"
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLanguageChange('ml')}
+              className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
+                language === 'ml'
+                  ? 'bg-white text-emerald-800 shadow-2xs font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="മലയാളത്തിലേക്ക് മാറ്റുക"
+            >
+              മലയാളം
+            </button>
+          </div>
+
           {/* Live Monsoon Weather Advisory */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs font-medium">
             <CloudRain className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>Monsoon Cell: <strong className="font-semibold text-amber-950">Yellow Alert</strong></span>
+            <span>
+              {language === 'ml' ? 'മൺസൂൺ ജാഗ്രത: ' : 'Monsoon Cell: '}
+              <strong className="font-semibold text-amber-950">
+                {language === 'ml' ? 'യെല്ലോ അലർട്ട്' : 'Yellow Alert'}
+              </strong>
+            </span>
           </div>
 
           {/* Hotline Direct */}
