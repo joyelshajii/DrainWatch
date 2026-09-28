@@ -14,6 +14,7 @@ import {
   Sparkles,
   Award,
   ArrowRight,
+  ArrowLeft,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Card, CardHeader, CardBody, CardFooter } from './ui/Card';
@@ -93,6 +94,10 @@ const BLOCKAGE_TYPES = [
 ];
 
 export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => {
+  // Mode state: 'stepper' (guided 3 steps) or 'all' (all-in-one form)
+  const [formMode, setFormMode] = useState<'stepper' | 'all'>('stepper');
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+
   // Form State
   const [lat, setLat] = useState(9.9674);
   const [lng, setLng] = useState(76.2995);
@@ -213,6 +218,16 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
       mapInstanceRef.current.panTo([lat, lng]);
     }
   }, [lat, lng]);
+
+  // Ensure Leaflet map canvas resizes cleanly when step 1 is displayed
+  useEffect(() => {
+    if ((currentStep === 1 || formMode === 'all') && mapInstanceRef.current) {
+      const timer = setTimeout(() => {
+        mapInstanceRef.current?.invalidateSize();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, formMode]);
 
   // Handle Photo File Upload & AI Classification
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -461,8 +476,32 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+            <button
+              type="button"
+              onClick={() => setFormMode('stepper')}
+              className={`px-3 py-1 rounded-md font-medium transition-all ${
+                formMode === 'stepper'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Guided Steps
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormMode('all')}
+              className={`px-3 py-1 rounded-md font-medium transition-all ${
+                formMode === 'all'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              All-in-One
+            </button>
+          </div>
           <Badge variant="neutral" dot className="font-mono text-xs font-semibold">
-            GIS Engine Active
+            GIS Active
           </Badge>
         </div>
       </div>
@@ -474,163 +513,357 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
         </div>
       )}
 
+      {/* Guided 3-Step Wizard Navigation Bar */}
+      {formMode === 'stepper' && (
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 shadow-2xs">
+          <div className="grid grid-cols-3 gap-2 flex-1">
+            <button
+              type="button"
+              onClick={() => setCurrentStep(1)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs transition-all ${
+                currentStep === 1
+                  ? 'bg-slate-900 text-white font-semibold shadow-2xs'
+                  : currentStep > 1
+                  ? 'bg-white border border-slate-200 text-emerald-700 font-medium hover:bg-slate-100'
+                  : 'bg-white/60 border border-slate-200/60 text-slate-500 hover:bg-white'
+              }`}
+            >
+              <span
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] ${
+                  currentStep === 1
+                    ? 'bg-white text-slate-900 font-bold'
+                    : currentStep > 1
+                    ? 'bg-emerald-100 text-emerald-700 font-bold'
+                    : 'bg-slate-100 text-slate-500'
+                }`}
+              >
+                {currentStep > 1 ? '✓' : '1'}
+              </span>
+              <span className="truncate">1. Pinpoint Location</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCurrentStep(2)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs transition-all ${
+                currentStep === 2
+                  ? 'bg-slate-900 text-white font-semibold shadow-2xs'
+                  : currentStep > 2
+                  ? 'bg-white border border-slate-200 text-emerald-700 font-medium hover:bg-slate-100'
+                  : 'bg-white/60 border border-slate-200/60 text-slate-500 hover:bg-white'
+              }`}
+            >
+              <span
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] ${
+                  currentStep === 2
+                    ? 'bg-white text-slate-900 font-bold'
+                    : currentStep > 2
+                    ? 'bg-emerald-100 text-emerald-700 font-bold'
+                    : 'bg-slate-100 text-slate-500'
+                }`}
+              >
+                {currentStep > 2 ? '✓' : '2'}
+              </span>
+              <span className="truncate">2. Issue Details</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCurrentStep(3)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs transition-all ${
+                currentStep === 3
+                  ? 'bg-slate-900 text-white font-semibold shadow-2xs'
+                  : 'bg-white/60 border border-slate-200/60 text-slate-500 hover:bg-white'
+              }`}
+            >
+              <span
+                className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] ${
+                  currentStep === 3
+                    ? 'bg-white text-slate-900 font-bold'
+                    : 'bg-slate-100 text-slate-500'
+                }`}
+              >
+                3
+              </span>
+              <span className="truncate">3. Evidence &amp; Submit</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* LEFT COLUMN: Spatial Telemetry & Ward Lock */}
-          <div className="lg:col-span-6 space-y-5">
-            <Card>
-              <CardHeader className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded bg-slate-100 text-slate-700 flex items-center justify-center font-mono font-bold text-xs">
-                    1
-                  </span>
-                  <h3 className="font-semibold text-xs text-slate-900 uppercase tracking-wider">
-                    Geotag &amp; Coordinates Picker
-                  </h3>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleUseCurrentLocation}
-                  icon={<Navigation className="w-3.5 h-3.5 text-slate-600" />}
-                >
-                  Use GPS
-                </Button>
-              </CardHeader>
-
-              <CardBody className="space-y-4">
-                {/* Presets */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-slate-600">
-                    <span className="font-medium">Quick Presets:</span>
-                    <span className="text-[11px] text-slate-400 font-mono">5 High-Risk Basins</span>
+        {/* STEP 1: Spatial Location & Ward Lock (Always kept mounted so Leaflet DOM is preserved) */}
+        <div className={formMode === 'stepper' && currentStep !== 1 ? 'hidden' : 'space-y-5'}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-7 space-y-5">
+              <Card>
+                <CardHeader className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded bg-slate-100 text-slate-700 flex items-center justify-center font-mono font-bold text-xs">
+                      1
+                    </span>
+                    <h3 className="font-semibold text-xs text-slate-900 uppercase tracking-wider">
+                      Geotag &amp; Coordinates Picker
+                    </h3>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {KOCHI_PRESETS.map((p) => (
-                      <button
-                        key={p.name}
-                        type="button"
-                        onClick={() => handleSelectPreset(p)}
-                        className={`text-xs px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
-                          lat === p.lat && lng === p.lng
-                            ? 'bg-slate-900 text-white border-slate-900'
-                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {p.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Map container */}
-                <div className="space-y-1.5">
-                  <div className="relative border border-slate-200 rounded-xl overflow-hidden">
-                    <div ref={mapContainerRef} className="w-full h-52 z-0" />
-                    <div className="absolute top-2 left-2 z-10 bg-slate-950/80 backdrop-blur-sm text-slate-200 px-2.5 py-1 rounded-md text-[11px] font-mono border border-slate-800">
-                      Target: {lat.toFixed(5)}°N, {lng.toFixed(5)}°E
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleUseCurrentLocation}
+                    icon={<Navigation className="w-3.5 h-3.5 text-slate-600" />}
+                  >
+                    Use GPS
+                  </Button>
+                </CardHeader>
+
+                <CardBody className="space-y-4">
+                  {/* Presets */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-slate-600">
+                      <span className="font-medium">Quick Presets:</span>
+                      <span className="text-[11px] text-slate-400 font-mono">5 High-Risk Basins</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {KOCHI_PRESETS.map((p) => (
+                        <button
+                          key={p.name}
+                          type="button"
+                          onClick={() => handleSelectPreset(p)}
+                          className={`text-xs px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
+                            lat === p.lat && lng === p.lng
+                              ? 'bg-slate-900 text-white border-slate-900'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          {p.name}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-500 flex items-center justify-between">
-                    <span>Click on map or drag pin to pinpoint obstruction.</span>
-                    <span className="font-mono text-[10px] text-slate-400">EPSG:4326</span>
-                  </p>
-                </div>
 
-                {/* Inputs */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Input
-                    label="Road / Canal Stretch:"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="e.g. Subhash Chandra Bose Road"
-                    required
-                  />
-                  <Input
-                    label="Prominent Landmark:"
-                    value={landmark}
-                    onChange={(e) => setLandmark(e.target.value)}
-                    placeholder="e.g. Near Kadavanthra Culvert Bridge"
-                  />
-                </div>
-              </CardBody>
-            </Card>
-
-            {/* WARD LOCK HUD: Restrained dark card, clear typographic hierarchy */}
-            <div className="rounded-xl border border-slate-800 bg-[#090d16] text-slate-100 p-5 space-y-4 shadow-2xs relative overflow-hidden">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <div className="font-mono font-bold text-xs uppercase tracking-wider text-slate-200">
-                    Spatial Ward Engine Lock
+                  {/* Map container */}
+                  <div className="space-y-1.5">
+                    <div className="relative border border-slate-200 rounded-xl overflow-hidden">
+                      <div ref={mapContainerRef} className="w-full h-56 z-0" />
+                      <div className="absolute top-2 left-2 z-10 bg-slate-950/80 backdrop-blur-sm text-slate-200 px-2.5 py-1 rounded-md text-[11px] font-mono border border-slate-800">
+                        Target: {lat.toFixed(5)}°N, {lng.toFixed(5)}°E
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 flex items-center justify-between">
+                      <span>Click on map or drag pin to pinpoint obstruction.</span>
+                      <span className="font-mono text-[10px] text-slate-400">EPSG:4326</span>
+                    </p>
                   </div>
+
+                  {/* Inputs */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Road / Canal Stretch:"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="e.g. Subhash Chandra Bose Road"
+                      required
+                    />
+                    <Input
+                      label="Prominent Landmark:"
+                      value={landmark}
+                      onChange={(e) => setLandmark(e.target.value)}
+                      placeholder="e.g. Near Kadavanthra Culvert Bridge"
+                    />
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+
+            <div className="lg:col-span-5 space-y-5">
+              {/* WARD LOCK HUD */}
+              <div className="rounded-xl border border-slate-800 bg-[#090d16] text-slate-100 p-5 space-y-4 shadow-2xs relative overflow-hidden">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div className="font-mono font-bold text-xs uppercase tracking-wider text-slate-200">
+                      Spatial Ward Engine Lock
+                    </div>
+                  </div>
+
+                  {resolvingWard ? (
+                    <span className="text-xs font-mono text-slate-400 animate-pulse">
+                      Computing Polygon...
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono bg-slate-800 text-slate-200 px-2 py-0.5 rounded border border-slate-700">
+                      POLYGON VERIFIED
+                    </span>
+                  )}
                 </div>
 
-                {resolvingWard ? (
-                  <span className="text-xs font-mono text-slate-400 animate-pulse">
-                    Computing Polygon...
-                  </span>
+                {wardInfo ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-3 border-b border-slate-800/80 pb-3">
+                      <div>
+                        <span className="text-[10px] text-slate-400 block font-mono">Jurisdictional Ward:</span>
+                        <strong className="text-white text-sm font-semibold">
+                          Ward {wardInfo.number} - {wardInfo.name}
+                        </strong>
+                        <div className="text-xs text-slate-400 mt-0.5">{wardInfo.local_body}</div>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block font-mono">Canal Basin &amp; Zone:</span>
+                        <strong className="text-slate-200 text-xs font-medium block">
+                          {wardInfo.canal_basin}
+                        </strong>
+                        <div className="text-xs text-slate-400 mt-0.5">{wardInfo.zone}</div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5 pt-0.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-400">Designated AE (LSGD Wing):</span>
+                        <span className="font-medium text-slate-100">{wardInfo.assistant_engineer}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-slate-400">
+                        <span>Field Overseer:</span>
+                        <span className="text-slate-300">{wardInfo.overseer}</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center justify-between text-xs font-mono">
+                      <span className="text-slate-400">Statutory SLA Window:</span>
+                      <span className="text-emerald-400 font-bold">
+                        {currentSeverityObj.sla}h Response Target
+                      </span>
+                    </div>
+                  </div>
                 ) : (
-                  <span className="text-[10px] font-mono bg-slate-800 text-slate-200 px-2 py-0.5 rounded border border-slate-700">
-                    POLYGON VERIFIED
-                  </span>
+                  <div className="py-6 text-center text-xs text-slate-400 font-mono">
+                    Calculating point-in-polygon coordinates against Kochi Corporation boundaries...
+                  </div>
                 )}
               </div>
 
-              {wardInfo ? (
-                <div className="space-y-3 text-xs">
-                  <div className="grid grid-cols-2 gap-3 border-b border-slate-800/80 pb-3">
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-mono">Jurisdictional Ward:</span>
-                      <strong className="text-white text-sm font-semibold">
-                        Ward {wardInfo.number} - {wardInfo.name}
-                      </strong>
-                      <div className="text-xs text-slate-400 mt-0.5">{wardInfo.local_body}</div>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-mono">Canal Basin &amp; Zone:</span>
-                      <strong className="text-slate-200 text-xs font-medium block">
-                        {wardInfo.canal_basin}
-                      </strong>
-                      <div className="text-xs text-slate-400 mt-0.5">{wardInfo.zone}</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5 pt-0.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-400">Designated AE (LSGD Wing):</span>
-                      <span className="font-medium text-slate-100">{wardInfo.assistant_engineer}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-slate-400">
-                      <span>Field Overseer:</span>
-                      <span className="text-slate-300">{wardInfo.overseer}</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center justify-between text-xs font-mono">
-                    <span className="text-slate-400">Statutory SLA Window:</span>
-                    <span className="text-emerald-400 font-bold">
-                      {currentSeverityObj.sla}h Response Target
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="py-6 text-center text-xs text-slate-400 font-mono">
-                  Calculating point-in-polygon coordinates against Kochi Corporation boundaries...
+              {formMode === 'stepper' && (
+                <div className="pt-2 flex justify-end">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => setCurrentStep(2)}
+                    icon={<ArrowRight className="w-4 h-4" />}
+                    className="w-full sm:w-auto"
+                  >
+                    Continue to Step 2: Issue Details
+                  </Button>
                 </div>
               )}
             </div>
           </div>
+        </div>
 
-          {/* RIGHT COLUMN: Evidence & Incident Details */}
-          <div className="lg:col-span-6 space-y-5">
+        {/* STEP 2: Blockage Nature & Severity Levels */}
+        {(formMode === 'all' || currentStep === 2) && (
+          <div className={formMode === 'stepper' && currentStep !== 2 ? 'hidden' : 'space-y-5'}>
             <Card>
               <CardHeader className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-5 h-5 rounded bg-slate-100 text-slate-700 flex items-center justify-center font-mono font-bold text-xs">
                     2
+                  </span>
+                  <h3 className="font-semibold text-xs text-slate-900 uppercase tracking-wider">
+                    Blockage Nature &amp; Severity Assessment
+                  </h3>
+                </div>
+                <span className="text-[11px] text-slate-400 font-mono">Drain Hydraulics</span>
+              </CardHeader>
+
+              <CardBody className="space-y-5">
+                {/* Blockage Nature */}
+                <Select
+                  label="Blockage Nature & Debris Type:"
+                  value={blockageType}
+                  onChange={(e) => setBlockageType(e.target.value)}
+                  helperText={BLOCKAGE_TYPES.find((b) => b.id === blockageType)?.desc}
+                >
+                  {BLOCKAGE_TYPES.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.title}
+                    </option>
+                  ))}
+                </Select>
+
+                {/* Severity: Clean button tiles */}
+                <div className="space-y-2">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Severity &amp; Inundation Hazard:
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {SEVERITY_LEVELS.map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => setSeverity(s.id)}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          severity === s.id
+                            ? s.activeBadge
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        <div className="text-xs font-semibold">{s.name}</div>
+                        <div className="text-[11px] font-mono mt-0.5 opacity-80">{s.sla}h SLA</div>
+                        <div className="text-[11px] text-slate-500 mt-1 line-clamp-2">{s.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Observation &amp; Waterflow Impact:
+                  </label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    placeholder="Describe obstruction extent, water stagnation, or backflow into road..."
+                    className="w-full rounded-lg border border-slate-300 p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-800"
+                    required
+                  />
+                </div>
+
+                {formMode === 'stepper' && (
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setCurrentStep(1)}
+                      icon={<ArrowLeft className="w-4 h-4" />}
+                    >
+                      Back to Location
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={() => setCurrentStep(3)}
+                      icon={<ArrowRight className="w-4 h-4" />}
+                    >
+                      Continue to Step 3: Evidence &amp; Submit
+                    </Button>
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </div>
+        )}
+
+        {/* STEP 3: Evidence, AI Verification & Contact */}
+        {(formMode === 'all' || currentStep === 3) && (
+          <div className={formMode === 'stepper' && currentStep !== 3 ? 'hidden' : 'space-y-5'}>
+            <Card>
+              <CardHeader className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-slate-100 text-slate-700 flex items-center justify-center font-mono font-bold text-xs">
+                    3
                   </span>
                   <h3 className="font-semibold text-xs text-slate-900 uppercase tracking-wider">
                     Photographic Proof &amp; AI Analysis
@@ -649,7 +882,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
                           <img
                             src={photoBase64 || photoUrl}
                             alt="Obstruction preview"
-                            className="w-full h-44 object-cover"
+                            className="w-full h-48 object-cover"
                           />
                           <div className="absolute bottom-2 left-2 bg-slate-950/80 text-white text-[10px] font-mono px-2 py-0.5 rounded">
                             Evidence Attached
@@ -717,61 +950,8 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
                   )}
                 </div>
 
-                {/* Blockage Nature */}
-                <Select
-                  label="Blockage Nature & Debris Type:"
-                  value={blockageType}
-                  onChange={(e) => setBlockageType(e.target.value)}
-                  helperText={BLOCKAGE_TYPES.find((b) => b.id === blockageType)?.desc}
-                >
-                  {BLOCKAGE_TYPES.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.title}
-                    </option>
-                  ))}
-                </Select>
-
-                {/* Severity: Clean button tiles */}
-                <div className="space-y-2">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Severity &amp; Inundation Hazard:
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {SEVERITY_LEVELS.map((s) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => setSeverity(s.id)}
-                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                          severity === s.id
-                            ? s.activeBadge
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
-                      >
-                        <div className="text-xs font-semibold">{s.name}</div>
-                        <div className="text-[11px] font-mono mt-0.5 opacity-80">{s.sla}h SLA</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Observation &amp; Waterflow Impact:
-                  </label>
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={2}
-                    placeholder="Describe obstruction extent, water stagnation, or backflow into road..."
-                    className="w-full rounded-lg border border-slate-300 p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-800"
-                    required
-                  />
-                </div>
-
                 {/* Reporter Contact Info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-100">
                   <Input
                     label="Your Name / Resident Title:"
                     value={reporterName}
@@ -786,22 +966,45 @@ export const ReportForm: React.FC<ReportFormProps> = ({ onReportSubmitted }) => 
                     placeholder="+91 94470 12345"
                   />
                 </div>
+
+                {formMode === 'stepper' && (
+                  <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setCurrentStep(2)}
+                      icon={<ArrowLeft className="w-4 h-4" />}
+                    >
+                      Back to Issue Details
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      loading={submitting || uploading}
+                      icon={<FileCheck className="w-4 h-4" />}
+                    >
+                      Submit Blockage Report &amp; Issue Ticket (+10 Points)
+                    </Button>
+                  </div>
+                )}
               </CardBody>
 
-              <CardFooter>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  loading={submitting || uploading}
-                  icon={<FileCheck className="w-4 h-4" />}
-                  className="w-full"
-                >
-                  Submit Blockage Report &amp; Issue Ticket (+10 Points)
-                </Button>
-              </CardFooter>
+              {formMode === 'all' && (
+                <CardFooter>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    loading={submitting || uploading}
+                    icon={<FileCheck className="w-4 h-4" />}
+                    className="w-full"
+                  >
+                    Submit Blockage Report &amp; Issue Ticket (+10 Points)
+                  </Button>
+                </CardFooter>
+              )}
             </Card>
           </div>
-        </div>
+        )}
       </form>
     </div>
   );
